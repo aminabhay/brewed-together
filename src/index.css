@@ -1,0 +1,349 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+html.locked,
+html.locked body {
+  overflow: hidden;
+}
+html,
+body {
+  background: #150d09;
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
+}
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+main {
+  pointer-events: none;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex min-h-[44px] items-center gap-2 rounded-full bg-amber px-6 py-2 font-sans font-semibold text-espresso shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foam disabled:opacity-60;
+  }
+  .btn-ghost {
+    @apply inline-flex min-h-[44px] items-center rounded-full border border-latte/60 px-6 py-2 font-sans text-foam transition hover:bg-foam/10;
+  }
+  .btn-small {
+    @apply inline-flex min-h-[44px] items-center rounded-full bg-espresso px-4 font-sans text-sm text-foam transition hover:bg-mocha;
+  }
+  .chip {
+    @apply inline-flex min-h-[44px] items-center gap-2 rounded-full bg-espresso/70 px-4 font-sans text-sm text-foam backdrop-blur transition hover:bg-espresso/90;
+  }
+  .paper {
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.5), transparent 40%),
+      linear-gradient(#fff8ee, #f3e5d0);
+    box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(111, 78, 55, 0.12);
+  }
+  .field {
+    @apply mb-4 block border-0 p-0;
+  }
+  .field > span,
+  .field legend {
+    @apply mb-1 block font-hand text-2xl text-espresso;
+  }
+  .field input,
+  .field textarea {
+    @apply w-full border-0 border-b-2 border-mocha/30 bg-transparent px-1 py-2 font-sans text-lg text-espresso outline-none transition focus:border-espresso;
+  }
+  .field em {
+    @apply mt-1 block font-sans text-sm not-italic text-[#A33A2B];
+  }
+  .stepper {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-espresso font-sans text-xl text-foam;
+  }
+}
+
+/* ── Story cards & section reveals ─────────────────────────── */
+.story-card,
+.reveal-on-active {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.reveal-on-active > * {
+  transition: inherit;
+}
+@media (min-width: 768px) {
+  .story-card {
+    transform: translate(40px, -50%);
+  }
+  .beat.is-active .story-card {
+    transform: translate(0, -50%) !important;
+  }
+  [data-beat='ch6'] .story-card,
+  [data-beat='ch6'].is-active .story-card {
+    transform: none !important;
+  }
+}
+.beat.is-active .story-card,
+.beat.is-active .reveal-on-active {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Handwriting ─────────────────────────────────────────── */
+.hw-word {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  fill-opacity: 0;
+}
+.is-writing .hw-word {
+  animation: hw-draw 2.4s ease forwards;
+}
+@keyframes hw-draw {
+  60% {
+    stroke-dashoffset: 0;
+    fill-opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    fill-opacity: 1;
+  }
+}
+.chalk-write {
+  animation: chalk 0.9s steps(24) both;
+  clip-path: inset(0 100% 0 0);
+}
+@keyframes chalk {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ── Little animations ───────────────────────────────────── */
+.fade-up {
+  animation: fade-up 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+.bubble-pop,
+.phone-pop,
+.msg-pop,
+.cup-pop {
+  animation: pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+.scroll-cup {
+  position: relative;
+  width: 26px;
+  height: 22px;
+  border: 2.5px solid #f3e5d0;
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+  animation: nudge 2s ease-in-out infinite;
+}
+.scroll-cup::after {
+  content: '';
+  position: absolute;
+  right: -9px;
+  top: 3px;
+  width: 7px;
+  height: 9px;
+  border: 2.5px solid #f3e5d0;
+  border-left: 0;
+  border-radius: 0 6px 6px 0;
+}
+.scroll-cup::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: -16px;
+  width: 6px;
+  height: 12px;
+  border-left: 2px solid rgba(243, 229, 208, 0.7);
+  border-radius: 50%;
+  animation: wisp 2s ease-in-out infinite;
+}
+@keyframes nudge {
+  50% {
+    transform: translateY(6px);
+  }
+}
+.steam-wisp {
+  display: block;
+  width: 3px;
+  height: 10px;
+  border-left: 2px solid rgba(255, 248, 238, 0.8);
+  border-radius: 50%;
+  animation: wisp 1.6s ease-in-out infinite;
+}
+@keyframes wisp {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scaleX(1);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scaleX(-1);
+  }
+}
+
+/* ── Loader cup ──────────────────────────────────────────── */
+.loader-steam {
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  width: 50px;
+  height: 40px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(255, 248, 238, 0.35), transparent);
+  filter: blur(6px);
+  animation: wisp 2.2s ease-in-out infinite;
+}
+.latte-heart {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 34px;
+  height: 30px;
+  transform: translateX(-50%);
+  animation: swirl 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.latte-heart::before,
+.latte-heart::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 18px;
+  height: 28px;
+  background: #f3e5d0;
+  border-radius: 18px 18px 0 0;
+}
+.latte-heart::before {
+  left: 16px;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+.latte-heart::after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+@keyframes swirl {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) rotate(-240deg) scale(0.2);
+  }
+}
+
+/* ── RSVP: order slip + receipt printer ─────────────────── */
+.order-slip {
+  background: repeating-linear-gradient(#fff8ee 0 31px, rgba(111, 78, 55, 0.14) 31px 32px), #fff8ee;
+  background-position: 0 14px;
+}
+.order-slip::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 12px;
+  background: radial-gradient(circle at 8px 0, transparent 7px, #fff8ee 7.5px) 0 0 / 16px 12px repeat-x;
+  transform: translateY(-11px);
+}
+.printer-body {
+  position: relative;
+  z-index: 2;
+  width: 260px;
+  height: 70px;
+  border-radius: 18px 18px 8px 8px;
+  background: linear-gradient(#6f4e37, #3b2418);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.printer-slot {
+  position: absolute;
+  bottom: 10px;
+  left: 30px;
+  right: 30px;
+  height: 6px;
+  border-radius: 3px;
+  background: #150d09;
+}
+.receipt {
+  width: 220px;
+  margin-top: -14px;
+  padding: 22px 16px 26px;
+  background: #fffdf7;
+  color: #2a1e17;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 93% 97%, 86% 100%, 79% 97%, 72% 100%, 65% 97%, 58% 100%, 51% 97%, 44% 100%, 37% 97%, 30% 100%, 23% 97%, 16% 100%, 9% 97%, 0 100%);
+  animation: print 2.2s steps(22) both;
+  transform-origin: top;
+}
+@keyframes print {
+  from {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    transform: translateY(-10px);
+  }
+}
+.confetti-bit {
+  position: absolute;
+  top: 60px;
+  width: 10px;
+  height: 14px;
+  animation: confetti 2.4s cubic-bezier(0.2, 0.7, 0.4, 1) both;
+}
+@keyframes confetti {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--dx), 420px) rotate(var(--rot));
+  }
+}
+
+/* ── FAQ chalkboard ─────────────────────────────────────── */
+.chalkboard {
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.06), transparent 60%),
+    radial-gradient(ellipse at 80% 90%, rgba(255, 255, 255, 0.04), transparent 50%),
+    #2b2b28;
+  border: 14px solid #5c3a22;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+/* ── Low tier fake tilt-shift ───────────────────────────── */
+.fake-dof {
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 32%, transparent 68%, #000 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 32%, transparent 68%, #000 100%);
+}
+
+.static-sections main,
+.static-sections section {
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
