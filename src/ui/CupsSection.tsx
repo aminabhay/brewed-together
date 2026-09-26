@@ -32,14 +32,13 @@ export function CupsSection() {
           {!revealed ? (
             <div className="reveal-on-active flex flex-col items-center gap-3">
               {seenHint && <p className="font-hand text-3xl text-foam drop-shadow">{cups.hint}</p>}
-              <p className="hidden font-sans text-sm text-latte/80 md:block">Drag or click a cup to turn it. Arrow keys work too.</p>
-              <p className="font-sans text-sm text-latte/80 md:hidden">Swipe sideways on a cup, or tap it.</p>
+              <p className="font-sans text-sm text-latte/80">Drag or tap a cup to turn it.</p>
               <div className="flex gap-2">
-                <button className="chip" onKeyDown={key(0)} onClick={() => cupsBus.rotate(0, 90)} aria-label={`Turn ${couple.groom}'s cup (arrow keys rotate)`}>
-                  ↻ {couple.groom}
-                </button>
-                <button className="chip" onKeyDown={key(1)} onClick={() => cupsBus.rotate(1, 90)} aria-label={`Turn ${couple.bride}'s cup (arrow keys rotate)`}>
+                <button className="chip" onKeyDown={key(0)} onClick={() => cupsBus.rotate(0, 90)} aria-label={`Turn ${couple.bride}'s cup (arrow keys rotate)`}>
                   ↻ {couple.bride}
+                </button>
+                <button className="chip" onKeyDown={key(1)} onClick={() => cupsBus.rotate(1, 90)} aria-label={`Turn ${couple.groom}'s cup (arrow keys rotate)`}>
+                  ↻ {couple.groom}
                 </button>
               </div>
               <button className="min-h-[44px] font-sans text-sm text-latte underline underline-offset-4" onClick={() => cupsBus.revealNow()}>

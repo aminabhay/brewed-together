@@ -4,7 +4,7 @@ import { RoundedBox } from '@react-three/drei'
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { wedding } from '../../../content/wedding'
-import { Character, jyotiProps } from '../../components/Character'
+import { Couple } from '../../components/Couple'
 import { Desk, Chair, Plant } from '../../components/Props'
 import { canvasTexture, HAND, SANS, memoTex } from '../../components/textures'
 import { mat, PALETTE } from '../../components/materials'
@@ -208,7 +208,8 @@ export default function PixoloDayOne() {
       ))}
       <Desk position={[-1.2, 0.08, 1.0]} w={1.8} d={0.9} color="#D8C3A5" />
       <Laptop position={[-1.2, 0.08 + 0.785, 1.0]} />
-      <Character {...jyotiProps} pose="stand" idle="tilt" position={[-1.2, 0.08, 1.9]} rotation={[0, Math.PI, 0]} />
+      {/* day one: she wore a green kurti */}
+      <Couple who="jyoti" kurti="#4F8A4B" flourish position={[-1.2, 0.08, 1.9]} rotation={[0, Math.PI, 0]} />
       <Plant position={[3.6, 0.08, -2.4]} scale={1.2} />
       <IdCard />
     </Chapter>

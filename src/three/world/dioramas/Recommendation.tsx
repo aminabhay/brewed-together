@@ -4,7 +4,8 @@ import { Line, RoundedBox } from '@react-three/drei'
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { wedding } from '../../../content/wedding'
-import { Character, abhayProps } from '../../components/Character'
+import { Character } from '../../components/Character'
+import { Couple } from '../../components/Couple'
 import { Desk, Chair } from '../../components/Props'
 import { canvasTexture, HAND, memoTex } from '../../components/textures'
 import { mat, PALETTE } from '../../components/materials'
@@ -190,7 +191,7 @@ export default function Recommendation() {
       {/* Abhay at his own desk, across the room */}
       <Desk position={[2.6, 0.08, -0.2]} w={1.4} d={0.8} />
       <Chair position={[2.6, 0.08, -1.0]} seat={0.72} />
-      <Character {...abhayProps} pose="table" idle="breathe" position={[2.6, 0.08, -1.0]} />
+      <Couple who="abhay" sit={0.72} hold="table" flourish position={[2.6, 0.08, -1.0]} />
       <mesh position={[2.6, 0.08 + 0.75 + 0.14, -0.1]} rotation={[-0.3, 0, 0]} material={mat('#333', { rough: 0.3 })}>
         <boxGeometry args={[0.6, 0.02, 0.4]} />
       </mesh>

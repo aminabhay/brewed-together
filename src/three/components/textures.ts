@@ -19,8 +19,14 @@ export function canvasTexture(w: number, h: number, draw: Draw, opts: { repeat?:
     tex.repeat.set(...opts.repeat)
   }
   const render = () => {
+    // reset any transform/shadow left by a previous pass (textures redraw once fonts load)
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
+    ctx.shadowBlur = 0
+    ctx.globalAlpha = 1
     ctx.clearRect(0, 0, w, h)
+    ctx.save()
     draw(ctx, w, h)
+    ctx.restore()
     tex.needsUpdate = true
   }
   render()

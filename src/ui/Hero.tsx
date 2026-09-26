@@ -18,7 +18,9 @@ export function Hero() {
           )}
           <div className={`flex flex-col items-center transition-opacity duration-700 ${entered ? 'opacity-100' : 'opacity-0'}`}>
             <span className="font-sans text-xs uppercase tracking-[0.35em] text-latte/80">{wedding.hero.scrollHint}</span>
-            <span className="scroll-cup mt-3" aria-hidden />
+            <span className="scroll-cup mt-8" aria-hidden>
+              <i />
+            </span>
           </div>
         </Sticky>
       </Section>
@@ -27,7 +29,7 @@ export function Hero() {
           <div className="reveal-on-active w-full max-w-3xl">
             <Handwritten key={introKey} text={wedding.hero.headline} size={96} className="mx-auto w-full" />
             <p className="mt-2 font-serif text-xl text-latte drop-shadow md:text-3xl">
-              {wedding.couple.groomFull} <span className="font-hand text-amber">&amp;</span> {wedding.couple.brideFull}
+              {wedding.couple.brideFull} <span className="mx-1 font-hand text-amber">&amp;</span> {wedding.couple.groomFull}
             </p>
           </div>
         </Sticky>

@@ -23,7 +23,9 @@ export function Faq() {
                   >
                     <span>{item.q}</span>
                     <span className="flex-1 translate-y-[-6px] border-b-2 border-dotted border-[#F3EEE3]/40" aria-hidden />
-                    <span aria-hidden>{isOpen ? '−' : '☕'}</span>
+                    <svg aria-hidden width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 self-center transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
                   </button>
                   <div id={`faq-${i}`} className={`grid transition-all duration-500 ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                     <p className={`overflow-hidden font-hand text-2xl leading-snug text-[#F3EEE3]/85 ${isOpen ? 'chalk-write' : ''}`}>{item.a}</p>

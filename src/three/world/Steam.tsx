@@ -13,15 +13,21 @@ interface Props {
   /** Called every frame; returns { form, opacity } so parents can drive the steam without re-rendering. */
   drive?: () => { form?: number; opacity?: number }
   billboard?: boolean
+  /** write depth where the steam is dense (for text that must stay in focus through depth of field) */
+  solid?: boolean
 }
 
 let pointerX = 0
 if (typeof window !== 'undefined')
   window.addEventListener('pointermove', (e) => (pointerX = (e.clientX / window.innerWidth) * 2 - 1), { passive: true })
 
-export function Steam({ position = [0, 0, 0], width = 0.3, height = 0.8, color, opacity = 0.5, mask, drive, billboard = true }: Props) {
+export function Steam({ position = [0, 0, 0], width = 0.3, height = 0.8, color, opacity = 0.5, mask, drive, billboard = true, solid = false }: Props) {
   const material = useMemo(() => makeSteamMaterial(color), [color])
   const mesh = useRef<THREE.Mesh>(null)
+  useEffect(() => {
+    material.depthWrite = solid
+    material.uniforms.uAlphaCut.value = solid ? 0.18 : 0
+  }, [solid, material])
   useEffect(() => {
     material.uniforms.uMask.value = mask ?? null
     material.uniforms.uHasMask.value = mask ? 1 : 0

@@ -14,11 +14,15 @@ import { mat, PALETTE } from '../components/materials'
 import { Steam } from './Steam'
 import { Blob } from '../components/Props'
 import { CAFE_LOCAL } from './layout'
+import { isNear } from './useBeatVisibility'
 
 const R_TOP = 0.12
 const R_BOT = 0.095
 const H = 0.26
 const STEP = Math.PI / 4
+/** Each cup turns at most half a turn either way: the date side is exactly 180° round. */
+const clampA = (x: number) => THREE.MathUtils.clamp(x, -Math.PI, Math.PI)
+const snap = (x: number) => clampA(Math.round(x / STEP) * STEP)
 const isTouch = typeof window !== 'undefined' && window.matchMedia?.('(hover: none)').matches
 
 /** Cup wrap: name on the front (u = 0, facing the viewer), date half on the back (u = 0.5). */
@@ -28,21 +32,24 @@ export function cupTexture(name: string, date: string) {
     ctx.fillRect(0, 0, w, h)
     ctx.fillStyle = 'rgba(111,78,55,0.18)'
     ctx.fillRect(0, h * 0.82, w, h * 0.05)
-    const drawAt = (text: string, u: number, size: number, color: string, rot = -0.06) => {
+    const drawAt = (text: string, u: number, size: number, color: string, rot = -0.06, y = 0.46) => {
       ctx.font = `700 ${size}px ${HAND}`
       ctx.fillStyle = color
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       for (const x of [u * w, u * w - w, u * w + w]) {
         ctx.save()
-        ctx.translate(x, h * 0.46)
+        ctx.translate(x, h * y)
         ctx.rotate(rot)
         ctx.fillText(text, 0, 0)
         ctx.restore()
       }
     }
     drawAt(name, 0, 120, '#2A1E17')
-    drawAt('♥', 0.12, 50, '#D98A8A', 0.2)
+    // the heart floats just above the last letter of the name (clear of the "y")
+    ctx.font = `700 120px ${HAND}`
+    const half = ctx.measureText(name).width / 2
+    drawAt('♥', (half - 14) / w, 46, '#D98A8A', 0.2, 0.16)
     drawAt(date, 0.5, 118, '#9C3D2E', 0.03)
   })
 }
@@ -52,7 +59,7 @@ interface CupProps {
   name: string
   date: string
   position: [number, number, number]
-  angle: React.MutableRefObject<{ a: number; target: number; vel: number }>
+  angle: React.MutableRefObject<{ a: number; target: number; vel: number; locked: boolean }>
   groupRef: React.RefObject<THREE.Group>
   onHover: (i: number | null) => void
 }
@@ -71,9 +78,11 @@ function Cup({ index, name, date, position, angle, groupRef, onHover }: CupProps
     if (!drag.current) {
       // inertia, then spring toward the snapped target
       if (Math.abs(s.vel) > 0.02) {
-        s.a += s.vel * dt
+        const next = clampA(s.a + s.vel * dt)
+        if (next !== s.a + s.vel * dt) s.vel = 0 // hit the 180° stop
+        s.a = next
         s.vel *= Math.pow(0.04, dt)
-        s.target = Math.round(s.a / STEP) * STEP
+        s.target = snap(s.a)
       } else {
         s.vel = 0
         s.a += (s.target - s.a) * Math.min(1, dt * 8)
@@ -83,6 +92,7 @@ function Cup({ index, name, date, position, angle, groupRef, onHover }: CupProps
   })
 
   const down = (e: ThreeEvent<PointerEvent>) => {
+    if (angle.current.locked) return // date revealed: the cups stay put
     e.stopPropagation()
     ;(e.target as Element).setPointerCapture?.(e.pointerId)
     drag.current = { x: e.clientX, t: performance.now(), moved: 0, last: performance.now() }
@@ -95,7 +105,7 @@ function Cup({ index, name, date, position, angle, groupRef, onHover }: CupProps
     drag.current.x = e.clientX
     drag.current.moved += Math.abs(dx)
     const d = dx * 0.013
-    angle.current.a += d
+    angle.current.a = clampA(angle.current.a + d)
     angle.current.vel = d / Math.max(0.008, (now - drag.current.last) / 1000)
     drag.current.last = now
   }
@@ -106,12 +116,12 @@ function Cup({ index, name, date, position, angle, groupRef, onHover }: CupProps
     ;(e.target as Element).releasePointerCapture?.(e.pointerId)
     const s = angle.current
     if (d.moved < 6 && performance.now() - d.t < 400) {
-      // tap: quarter turn
+      // tap: a quarter turn onward, stopping at the date (180°)
       s.vel = 0
-      s.target = Math.round(s.a / STEP) * STEP + Math.PI / 2
+      s.target = s.a < -0.01 ? snap(s.a - Math.PI / 2) : snap(s.a + Math.PI / 2)
     } else {
       s.vel = THREE.MathUtils.clamp(s.vel, -14, 14)
-      s.target = Math.round(s.a / STEP) * STEP
+      s.target = snap(s.a)
     }
   }
 
@@ -162,8 +172,8 @@ function Cup({ index, name, date, position, angle, groupRef, onHover }: CupProps
 /** The two interactive cups: turn both until the date lines up. */
 export function Cups() {
   const { couple, date, cups } = wedding
-  const a = useRef({ a: 0, target: 0, vel: 0 })
-  const b = useRef({ a: 0, target: 0, vel: 0 })
+  const a = useRef({ a: 0, target: 0, vel: 0, locked: false })
+  const b = useRef({ a: 0, target: 0, vel: 0, locked: false })
   const ga = useRef<THREE.Group>(null!)
   const gb = useRef<THREE.Group>(null!)
   const heart = useMemo(() => memoTex('heart', heartTexture), [])
@@ -184,6 +194,12 @@ export function Cups() {
   const celebrate = (withClink: boolean) => {
     if (done.current) return
     done.current = true
+    // lock both cups on the date side
+    for (const s of [a.current, b.current]) {
+      s.locked = true
+      s.vel = 0
+      s.target = s.a < 0 ? -Math.PI : Math.PI
+    }
     const tl = gsap.timeline()
     tl.to(ga.current.position, { x: posA[0] + 0.09, duration: 0.55, ease: 'power2.in' }, 0)
       .to(gb.current.position, { x: posB[0] - 0.09, duration: 0.55, ease: 'power2.in' }, 0)
@@ -202,16 +218,18 @@ export function Cups() {
 
   const autoReveal = () => {
     if (done.current) return
-    a.current.target = Math.PI
-    b.current.target = Math.PI
-    a.current.vel = b.current.vel = 0
+    for (const s of [a.current, b.current]) {
+      s.vel = 0
+      s.target = s.a < 0 ? -Math.PI : Math.PI
+    }
   }
 
   useEffect(() => {
     cupsBus.rotate = (i, deg) => {
       const s = i === 0 ? a.current : b.current
+      if (s.locked) return
       s.vel = 0
-      s.target = Math.round(s.a / STEP) * STEP + THREE.MathUtils.degToRad(deg)
+      s.target = snap(s.a + THREE.MathUtils.degToRad(deg))
     }
     cupsBus.revealNow = autoReveal
   }, [])
@@ -226,6 +244,7 @@ export function Cups() {
   }, [revealed])
 
   useFrame(() => {
+    if (hover !== null && !isNear(['cups', 'backToCups'], 0.45)) setHover(null) // never leave the HTML tooltip behind
     if (done.current) return
     // scrolled past without solving → turn them for the guest
     if ((scrollState.local.cups ?? 0) > 0.82 || scrollState.beatPos > 2.6) autoReveal()
@@ -238,8 +257,8 @@ export function Cups() {
 
   return (
     <group>
-      <Cup index={0} name={couple.groom} date={date.cupA} position={posA} angle={a} groupRef={ga} onHover={setHover} />
-      <Cup index={1} name={couple.bride} date={date.cupB} position={posB} angle={b} groupRef={gb} onHover={setHover} />
+      <Cup index={0} name={couple.bride} date={date.cupA} position={posA} angle={a} groupRef={ga} onHover={setHover} />
+      <Cup index={1} name={couple.groom} date={date.cupB} position={posB} angle={b} groupRef={gb} onHover={setHover} />
       <Steam position={[posA[0], top + H, posA[2]]} width={0.2} height={0.55} opacity={0.45} drive={() => ({ opacity: form.current.separate })} />
       <Steam position={[posB[0], top + H, posB[2]]} width={0.2} height={0.55} opacity={0.45} drive={() => ({ opacity: form.current.separate })} />
       <Steam position={[mid[0], mid[1] + 0.01, mid[2]]} width={0.34} height={0.36} opacity={0.9} mask={heart} drive={() => ({ form: form.current.heart, opacity: form.current.heart })} />

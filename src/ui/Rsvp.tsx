@@ -11,7 +11,6 @@ interface Form {
   phone: string
   count: number
   events: string[]
-  food: string
   note: string
 }
 
@@ -41,8 +40,8 @@ export function Rsvp() {
   const guest = useStore((s) => s.guest)
   const rsvp = useStore((s) => s.rsvp)
   const setRsvp = useStore((s) => s.setRsvp)
-  const { maxGuests, deadline, foodOptions } = wedding.rsvp
-  const [f, setF] = useState<Form>({ name: guest, phone: '', count: 1, events: wedding.events.map((e) => e.id), food: foodOptions[0], note: '' })
+  const { maxGuests, deadline } = wedding.rsvp
+  const [f, setF] = useState<Form>({ name: guest, phone: '', count: 1, events: wedding.events.map((e) => e.id), note: '' })
   const [err, setErr] = useState<Record<string, string>>({})
   const busy = useRef(false)
 
@@ -151,18 +150,6 @@ export function Rsvp() {
               </fieldset>
               )}
 
-              <fieldset className="field">
-                <legend>Food preference</legend>
-                <div className="flex gap-2">
-                  {foodOptions.map((o) => (
-                    <label key={o} className={`flex min-h-[44px] cursor-pointer items-center rounded-full border px-4 font-sans text-sm ${f.food === o ? 'border-espresso bg-espresso text-foam' : 'border-mocha/40 text-espresso'}`}>
-                      <input type="radio" name="food" className="sr-only" checked={f.food === o} onChange={() => setF({ ...f, food: o })} />
-                      {o}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-
               <label className="field">
                 <span>A note for the couple</span>
                 <textarea rows={3} value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} maxLength={600} />
@@ -174,7 +161,7 @@ export function Rsvp() {
                 </p>
               )}
               <button type="submit" className="btn w-full justify-center" disabled={rsvp.status === 'sending'}>
-                {rsvp.status === 'sending' ? 'Sending your order…' : rsvp.status === 'error' ? 'Try again' : 'Place order ☕'}
+                {rsvp.status === 'sending' ? 'Sending your order…' : rsvp.status === 'error' ? 'Try again' : 'Happy to join'}
               </button>
             </form>
           )}

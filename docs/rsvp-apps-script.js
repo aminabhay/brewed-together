@@ -16,7 +16,7 @@
  */
 
 const SHEET_NAME = 'RSVPs'
-const HEADERS = ['Submitted at', 'Name', 'Phone', 'Guests', 'Events', 'Food', 'Note', 'Invite link name']
+const HEADERS = ['Submitted at', 'Name', 'Phone', 'Guests', 'Events', 'Note', 'Invite link name']
 
 function doPost(e) {
   const lock = LockService.getScriptLock()
@@ -36,7 +36,6 @@ function doPost(e) {
       String(data.phone || '').slice(0, 30),
       Math.max(1, Math.min(20, Number(data.count) || 1)),
       String(data.events || '').slice(0, 300),
-      String(data.food || '').slice(0, 30),
       String(data.note || '').slice(0, 600),
       String(data.invite || '').slice(0, 120),
     ])

@@ -14,7 +14,7 @@ export function FallbackStory() {
       </div>
       <h1 className="mt-6 font-hand text-6xl">{wedding.hero.headline}</h1>
       <p className="mt-2 font-serif text-2xl text-latte">
-        {wedding.couple.groomFull} &amp; {wedding.couple.brideFull}
+        {wedding.couple.brideFull} &amp; {wedding.couple.groomFull}
       </p>
 
       <div className="paper mx-auto mt-12 max-w-md rounded-2xl p-6 text-espresso">

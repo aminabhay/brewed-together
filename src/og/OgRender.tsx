@@ -37,7 +37,7 @@ function Title() {
         ctx.textAlign = 'center'
         ctx.fillStyle = '#FFF8EE'
         ctx.font = `700 150px ${HAND}`
-        ctx.fillText(`${wedding.couple.groom} & ${wedding.couple.bride}`, w / 2, 160)
+        ctx.fillText(`${wedding.couple.bride} & ${wedding.couple.groom}`, w / 2, 160)
         ctx.fillStyle = '#FFB347'
         ctx.font = `500 76px ${SERIF}`
         ctx.fillText(`${wedding.date.display} · ${wedding.date.city}`, w / 2, 290)
@@ -89,8 +89,8 @@ export default function OgRender() {
             <circleGeometry args={[5, 48]} />
             <meshStandardMaterial color="#6F4E37" />
           </mesh>
-          <OgCup x={-1.2} name={wedding.couple.groom} date={wedding.date.cupA} />
-          <OgCup x={1.2} name={wedding.couple.bride} date={wedding.date.cupB} />
+          <OgCup x={-1.2} name={wedding.couple.bride} date={wedding.date.cupA} />
+          <OgCup x={1.2} name={wedding.couple.groom} date={wedding.date.cupB} />
           <Title />
           <Capture onDone={done} />
         </Canvas>

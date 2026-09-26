@@ -3,12 +3,13 @@ import { useFrame } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { wedding } from '../../../content/wedding'
-import { Character, abhayProps } from '../../components/Character'
+import { Couple } from '../../components/Couple'
 import { Crowd, type CrowdMember } from '../../components/Crowd'
 import { Desk } from '../../components/Props'
 import { canvasTexture, HAND, memoTex, SANS } from '../../components/textures'
 import { mat, PALETTE } from '../../components/materials'
 import { Chapter, Room } from './Chapter'
+import { isNear } from '../useBeatVisibility'
 import { interactBus } from '../../../state/interactBus'
 import { useEffect } from 'react'
 
@@ -87,6 +88,8 @@ function EmptyDesk() {
   )
   useFrame(({ clock }) => {
     glowRef.current.opacity = 0.55 + Math.sin(clock.elapsedTime * 2) * 0.2
+    // the tooltip is HTML, so it doesn't hide with the diorama: close it once the guest scrolls on
+    if (tip && !isNear(['ch1'], 0.45)) setTip(false)
   })
   return (
     <group
@@ -141,7 +144,7 @@ export default function Classroom() {
     <Chapter id="ch1">
       <Room w={9} d={7} color="#EDE3D1" floor="#A88B6C" />
       <Whiteboard />
-      <Character {...abhayProps} pose="point" idle="breathe" position={[2.2, 0.08, -2.3]} rotation={[0, -0.5, 0]} />
+      <Couple who="abhay" action="Present" position={[2.2, 0.08, -2.3]} rotation={[0, -0.5, 0]} />
       {ROWS.map((z, r) =>
         COLS.map((x, c) => (r === EMPTY.r && c === EMPTY.c ? null : <Desk key={`${r}${c}`} position={[x, 0.08, z]} />)),
       )}

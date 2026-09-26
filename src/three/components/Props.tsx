@@ -59,10 +59,10 @@ export function Desk({ position, rotation = 0, color = PALETTE.wood, w = 1.3, d 
   )
 }
 
-export function Chair({ position, rotation = 0, color = PALETTE.mocha, seat = 0.72 }: { position: V3; rotation?: number; color?: string; seat?: number }) {
+export function Chair({ position, rotation = 0, color = PALETTE.mocha, seat = 0.72, scale = 1 }: { position: V3; rotation?: number; color?: string; seat?: number; scale?: number }) {
   const m = mat(color, { rough: 0.7 })
   return (
-    <group position={position} rotation={[0, rotation, 0]}>
+    <group position={position} rotation={[0, rotation, 0]} scale={scale}>
       <RoundedBox args={[0.6, 0.07, 0.6]} radius={0.025} smoothness={2} position={[0, seat - 0.04, 0]} material={m} />
       <RoundedBox args={[0.6, 0.7, 0.07]} radius={0.025} smoothness={2} position={[0, seat + 0.35, -0.28]} material={m} />
       {[-1, 1].map((sx) =>

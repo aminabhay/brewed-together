@@ -25,7 +25,7 @@ export interface CharacterProps {
   /** seat height in world units (only for sitting poses) */
   seat?: number
   /** mutable animation inputs read every frame (no re-render): walk 0..1 swings legs */
-  anim?: { walk?: number }
+  anim?: { walk?: number; action?: string }
   position?: [number, number, number]
   rotation?: [number, number, number]
   scale?: number

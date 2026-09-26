@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { wedding } from '../../content/wedding'
 import { useStore } from '../../state/useStore'
 import { scrollState, smooth } from '../../scroll/scrollState'
-import { Character, abhayProps, jyotiProps } from '../components/Character'
+import { Couple, seatHeight } from '../components/Couple'
 import { mat, glow, PALETTE } from '../components/materials'
 import { brickTexture, canvasTexture, HAND, memoTex, textTexture, woodTexture, SERIF } from '../components/textures'
 import { Blob, Chair, DioramaBase, Plant } from '../components/Props'
@@ -359,7 +359,7 @@ function CafeTable() {
   return (
     <group position={[x, 0.1, z]}>
       <mesh position={[0, top - 0.03, 0]} material={mat('#A0714A', { rough: 0.5 })}>
-        <cylinderGeometry args={[0.85, 0.85, 0.06, 40]} />
+        <cylinderGeometry args={[CAFE_LOCAL.tableRadius, CAFE_LOCAL.tableRadius, 0.06, 40]} />
       </mesh>
       <mesh position={[0, (top - 0.06) / 2, 0]} material={mat('#2a2220', { metal: 0.5, rough: 0.4 })}>
         <cylinderGeometry args={[0.05, 0.05, top - 0.06, 10]} />
@@ -375,7 +375,13 @@ function CafeTable() {
 /** The café: open-front diorama on a base. Everything in this group is café-local. */
 export default function Cafe() {
   const [tx, , tz] = CAFE_LOCAL.table
-  const titleMask = useMemo(() => textTexture(wedding.cafe.chapterTitle, { w: 1024, h: 256, size: 150, color: '#fff' }), [])
+  const cs = CAFE_LOCAL.coupleSize
+  const co = CAFE_LOCAL.chairOffset
+  const chs = CAFE_LOCAL.chairScale
+  // each chair's seat is set so that person's feet reach the floor
+  const seatA = seatHeight('abhay', cs)
+  const seatJ = seatHeight('jyoti', cs)
+  const titleMask = useMemo(() => textTexture(wedding.cafe.chapterTitle, { w: 2048, h: 512, size: 300, color: '#fff', weight: '700' }), [])
   return (
     <group position={CAFE}>
       <DioramaBase size={[W + 0.6, D + 0.6]} plate={wedding.cafe.plate}>
@@ -389,19 +395,20 @@ export default function Cafe() {
         <Plant position={[-4.3, 0.1, BACK_Z + 0.6]} scale={1.3} />
         <Plant position={[4.5, 0.1, BACK_Z + 0.7]} scale={1.1} />
         <CafeTable />
-        <Chair position={[tx - 1.05, 0.1, tz]} rotation={Math.PI / 2} />
-        <Chair position={[tx + 1.05, 0.1, tz]} rotation={-Math.PI / 2} />
-        <Character {...abhayProps} pose="table" idle="tilt" seat={0.72} position={[tx - 1.05, 0.1, tz]} rotation={[0, Math.PI / 2, 0]} />
-        <Character {...jyotiProps} pose="table" idle="laugh" seat={0.72} position={[tx + 1.05, 0.1, tz]} rotation={[0, -Math.PI / 2, 0]} />
-        <Blob position={[tx - 1.05, 0.11, tz]} size={1} opacity={0.35} />
-        <Blob position={[tx + 1.05, 0.11, tz]} size={1} opacity={0.35} />
+        <Chair position={[tx - co, 0.1, tz]} rotation={Math.PI / 2} scale={chs} seat={seatJ / chs} />
+        <Chair position={[tx + co, 0.1, tz]} rotation={-Math.PI / 2} scale={chs} seat={seatA / chs} />
+        <Couple who="jyoti" size={cs} sit={seatJ} hold="table" reach={[1.15, 0.42]} flourish position={[tx - co, 0.1, tz]} rotation={[0, Math.PI / 2, 0]} />
+        <Couple who="abhay" size={cs} sit={seatA} hold="table" flourish position={[tx + co, 0.1, tz]} rotation={[0, -Math.PI / 2, 0]} />
+        <Blob position={[tx - co, 0.11, tz]} size={1.4} opacity={0.35} />
+        <Blob position={[tx + co, 0.11, tz]} size={1.4} opacity={0.35} />
         <Cups />
         {/* steam that writes "How it started…" above the miniature */}
         <Steam
-          position={[0.5, 5.6, 0]}
-          width={9}
-          height={2.4}
-          opacity={0.95}
+          position={CAFE_LOCAL.title}
+          width={CAFE_LOCAL.titleSize[0]}
+          height={CAFE_LOCAL.titleSize[1]}
+          opacity={1}
+          solid
           mask={titleMask}
           drive={() => {
             const p = scrollState.beatPos

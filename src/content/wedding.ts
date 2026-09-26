@@ -59,7 +59,7 @@ export const wedding = {
   },
 
   cups: {
-    hint: 'Turn the cups ☕☕',
+    hint: 'Tap on the cups to turn them',
     skip: 'Just show me the date',
     spin: '↻ spin me',
   },
@@ -111,7 +111,7 @@ export const wedding = {
   chapterExtras: {
     emptyDeskTooltip: 'Someone missed this one.',
     /** Jyoti's class WhatsApp group. `from: 'jyoti'` renders as her own (green) message. */
-    chatGroup: 'Class of 2016',
+    chatGroup: 'Class of 2014',
     chat: [
       { from: 'Priya', text: 'Guys, the guest lecture today was sooo good 🤯' }, // names are PLACEHOLDERS
       { from: 'Rohan', text: 'He built a whole app live in front of us!' },
@@ -123,12 +123,12 @@ export const wedding = {
     knockLine: 'I want to learn it too.',
     stampText: 'BRILLIANT STUDENT',
     pixoloLogoUrl: '', // PLACEHOLDER {{PIXOLO_LOGO_URL}} (optional, leave '' for neon text)
-    jyotiJoiningYear: '2016', // PLACEHOLDER: the year Jyoti joined Pixolo
+    jyotiJoiningYear: '2014',
     idBack: 'Status: Most loyal. Most brilliant.',
   },
 
   sheStayed: {
-    years: ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'], // PLACEHOLDER: adjust to Jyoti's years
+    years: ['2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'],
     /** In order. `style` picks the miniature: shop | cubicles | studio | cowork. */
     offices: [
       { name: 'The shop in Vidyavihar', style: 'shop' },
@@ -191,7 +191,6 @@ export const wedding = {
   rsvp: {
     maxGuests: 6, // PLACEHOLDER {{MAX_GUESTS}}
     deadline: '27 November 2026',
-    foodOptions: ['Veg', 'Jain', 'Non-veg'],
   },
 
   faq: [
@@ -209,8 +208,8 @@ export const wedding = {
       { name: 'Akshay · Abhay’s side', phone: '+91 98694 83112' },
       { name: 'Dinesh · Jyoti’s side', phone: '976941186' }, // CHECK: only 9 digits as given
     ],
-    madeBy: 'Made with love (and a lot of coffee) by Pixolo',
-    replay: 'Replay from the first sip ☕',
+    madeBy: 'Made with love (and a lot of coffee) by Weddingo',
+    replay: 'Replay from the first sip',
   },
 
   theme: {
@@ -227,8 +226,8 @@ export const wedding = {
   },
 
   meta: {
-    title: "Abhay & Jyoti · We're getting married ☕",
-    description: 'Brewed Together: the story of Abhay & Jyoti, and an invitation to one more coffee.',
+    title: "Jyoti & Abhay · We're getting married ☕",
+    description: 'Brewed Together: the story of Jyoti & Abhay, and an invitation to one more coffee.',
   },
 }
 

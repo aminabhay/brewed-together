@@ -3,8 +3,8 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { wedding } from '../../../content/wedding'
-import { Character, jyotiProps } from '../../components/Character'
-import { Bubble } from '../../components/Bubble'
+import { Couple } from '../../components/Couple'
+import { SpeechBubble } from '../../components/SpeechBubble'
 import { Plant } from '../../components/Props'
 import { textTexture, SERIF, canvasTexture, HAND, memoTex } from '../../components/textures'
 import { mat, PALETTE } from '../../components/materials'
@@ -112,9 +112,9 @@ export default function TeacherDoor() {
         <meshStandardMaterial map={notice} />
       </mesh>
       <Plant position={[3.5, 0.08, -2.6]} />
-      <Character {...jyotiProps} pose="stand" idle={state === 'open' ? 'tilt' : 'breathe'} position={[0.7, 0.08, -1.4]} rotation={[0, Math.PI, 0]} />
-      <Bubble text={wedding.chapterExtras.knockLine} position={[1.6, 2.0, -1.0]} width={3.4} visible={state === 'open'} />
-      <Bubble text="knock knock" position={[-0.4, 2.7, -2.2]} width={2} visible={state === 'knocking'} />
+      <Couple who="jyoti" action={state === 'open' ? 'Present' : 'Idle'} flourish={state === 'closed'} position={[0.7, 0.08, -1.4]} rotation={[0, Math.PI, 0]} />
+      <SpeechBubble text={wedding.chapterExtras.knockLine} position={[1.1, 2.3, -1.2]} show={state === 'open'} beat="ch3" />
+      <SpeechBubble text="knock knock…" position={[-0.2, 2.9, -2.2]} show={state === 'knocking'} beat="ch3" />
     </Chapter>
   )
 }

@@ -13,7 +13,16 @@ export const CAFE: V3 = [0, 0, 0]
 export const CAFE_LOCAL = {
   bulb: [1.2, 3.35, -3.55] as V3,
   table: [0.6, 0, -1.2] as V3,
-  tableTop: 1.1,
+  /** The couple (and their chairs + table) are drawn this much larger than the story miniatures,
+   *  so the mugs read as mugs in the close-ups. */
+  coupleSize: 1.6,
+  chairOffset: 1.4,
+  chairScale: 1.3,
+  tableTop: 1.15,
+  /** the steam-written "How it started…": hung in front of the diorama, closer to the camera */
+  title: [3, 6.2, 8] as V3,
+  titleSize: [8, 2.2] as [number, number],
+  tableRadius: 1.05,
   cupA: [0.36, 0, -0.9] as V3,
   cupB: [0.84, 0, -0.9] as V3,
   chalkboard: [-2.6, 2.35, -4.12] as V3,

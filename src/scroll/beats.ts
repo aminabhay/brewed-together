@@ -14,18 +14,20 @@ export type BeatId =
 export interface Beat {
   id: BeatId
   height: number
-  cam: { pos: V3; target: V3; fov: number; focusRange: number; bokeh: number }
+  /** `focus` (optional) keeps a different point sharp than the one the camera looks at */
+  cam: { pos: V3; target: V3; fov: number; focusRange: number; bokeh: number; focus?: V3 }
   side?: number
 }
 
 const add = (a: V3, b: V3): V3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]]
 const bulb = cafeWorld(CAFE_LOCAL.bulb)
 const cupsMid = cafeWorld([(CAFE_LOCAL.cupA[0] + CAFE_LOCAL.cupB[0]) / 2, CAFE_LOCAL.tableTop + 0.17, CAFE_LOCAL.cupA[2]])
-const tableC = cafeWorld([CAFE_LOCAL.table[0], 1.3, CAFE_LOCAL.table[2]])
+const titleCentre = cafeWorld([CAFE_LOCAL.title[0], CAFE_LOCAL.title[1] + CAFE_LOCAL.titleSize[1] / 2, CAFE_LOCAL.title[2]])
+const tableC = cafeWorld([CAFE_LOCAL.table[0], CAFE_LOCAL.tableTop + 0.2, CAFE_LOCAL.table[2]])
 
 const chapter = (id: keyof typeof CHAPTERS, i: number): Beat => ({
   id,
-  height: id === 'ch6' ? 520 : 170,
+  height: id === 'ch6' ? 600 : 170,
   side: id === 'ch6' ? 0 : 3.6,
   cam: {
     pos: add(CHAPTERS[id], [-2 + i * 0.3, 7.8 + i * 0.4, 14.5 + i * 0.7]),
@@ -38,9 +40,10 @@ const chapter = (id: keyof typeof CHAPTERS, i: number): Beat => ({
 
 export const BEATS: Beat[] = [
   { id: 'light', height: 110, cam: { pos: add(bulb, [0.08, 0.02, 0.85]), target: bulb, fov: 40, focusRange: 0.3, bokeh: 9 } },
-  { id: 'couple', height: 150, cam: { pos: add(tableC, [0.4, 1.9, 7.4]), target: add(tableC, [0, 0.55, 0]), fov: 42, focusRange: 2.5, bokeh: 5 } },
+  { id: 'couple', height: 150, cam: { pos: add(tableC, [0.4, 2.0, 8.6]), target: add(tableC, [0, 0.6, 0]), fov: 42, focusRange: 2.5, bokeh: 5 } },
   { id: 'cups', height: 280, cam: { pos: add(cupsMid, [0, 0.26, 1.25]), target: cupsMid, fov: 38, focusRange: 0.4, bokeh: 11 } },
-  { id: 'cafeDiorama', height: 170, cam: { pos: [7, 11.5, 20], target: [1.5, 2.2, -0.5], fov: 40, focusRange: 6, bokeh: 6 } },
+  // focus on the steam title in front; the miniature café behind it melts into bokeh
+  { id: 'cafeDiorama', height: 170, cam: { pos: [7, 11.5, 20], target: [1.5, 2.2, -0.5], fov: 40, focusRange: 2.2, bokeh: 7, focus: titleCentre } },
   chapter('ch1', 0),
   chapter('ch2', 1),
   chapter('ch3', 2),

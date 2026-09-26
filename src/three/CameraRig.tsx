@@ -105,6 +105,12 @@ export function CameraRig() {
     up.copy(camera.up)
     const shift = portrait ? up.multiplyScalar(-side * 0.7) : right.multiplyScalar(side)
     focusTgt.copy(tgt) // keep the subject itself in focus, not the shifted frame centre
+    // beats may focus somewhere other than the look-at point (e.g. the steam title)
+    for (let k = 0; k < 3; k++) {
+      const oa = a.cam.focus ? a.cam.focus[k] - a.cam.target[k] : 0
+      const ob = b.cam.focus ? b.cam.focus[k] - b.cam.target[k] : 0
+      focusTgt.setComponent(k, focusTgt.getComponent(k) + oa + (ob - oa) * f)
+    }
     pos.add(shift)
     tgt.add(shift)
 

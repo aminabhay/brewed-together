@@ -109,7 +109,7 @@ export function Venue({ staticMode = false }: { staticMode?: boolean }) {
         <div className="pointer-events-auto flex w-full flex-col gap-4 md:max-w-lg">
           <h2 className="font-hand text-5xl text-foam drop-shadow">{wedding.events.length > 1 ? 'The schedule' : 'The big day'}</h2>
           {wedding.events.map((e, i) => {
-            const cal: CalEvent = { title: `${e.name} · ${wedding.couple.groom} & ${wedding.couple.bride}`, start: e.startISO, end: e.endISO, location: `${e.venue}, ${e.address}` }
+            const cal: CalEvent = { title: `${e.name} · ${wedding.couple.bride} & ${wedding.couple.groom}`, start: e.startISO, end: e.endISO, location: `${e.venue}, ${e.address}` }
             return (
               <article
                 key={e.id}
@@ -117,17 +117,11 @@ export function Venue({ staticMode = false }: { staticMode?: boolean }) {
                 className={`paper cursor-pointer rounded-2xl p-5 transition-all duration-300 ${focus === i ? 'scale-[1.02] ring-4 ring-amber' : ''}`}
                 style={{ borderLeft: `8px solid ${e.colour}` }}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="font-serif text-2xl text-espresso">{e.name}</h3>
-                    <p className="font-sans text-sm text-mocha">
-                      {e.date} · {e.time}
-                    </p>
-                  </div>
-                  <span className="mt-1 flex items-center gap-2 font-sans text-xs text-espresso/80">
-                    <span className="inline-block h-5 w-5 rounded-full border border-espresso/20" style={{ background: e.colour }} aria-hidden />
-                    {e.dressCode}
-                  </span>
+                <div>
+                  <h3 className="font-serif text-2xl text-espresso">{e.name}</h3>
+                  <p className="font-sans text-sm text-mocha">
+                    {e.date} · {e.time}
+                  </p>
                 </div>
                 <p className="mt-2 font-sans text-espresso/90">
                   {e.venue} · <span className="text-espresso/70">{e.address}</span>

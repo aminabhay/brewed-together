@@ -20,6 +20,7 @@ export function makeSteamMaterial(color = '#fff4e6') {
       uHasMask: { value: 0 },
       uForm: { value: 0 },
       uSeed: { value: Math.random() * 10 },
+      uAlphaCut: { value: 0 },
     },
     vertexShader: /* glsl */ `
       uniform float uTime; uniform float uWind; uniform float uForm; uniform float uSeed;
@@ -33,7 +34,7 @@ export function makeSteamMaterial(color = '#fff4e6') {
       }`,
     fragmentShader: /* glsl */ `
       uniform float uTime; uniform vec3 uColor; uniform float uOpacity; uniform sampler2D uMask;
-      uniform float uHasMask; uniform float uForm; uniform float uSeed;
+      uniform float uHasMask; uniform float uForm; uniform float uSeed; uniform float uAlphaCut;
       varying vec2 vUv;
       ${NOISE}
       void main(){
@@ -44,13 +45,16 @@ export function makeSteamMaterial(color = '#fff4e6') {
         float col = smoothstep(0.32 + uv.y*0.12, 0.0, abs(uv.x - 0.5 + bend));
         float a = col * smoothstep(0.35, 0.8, n) * smoothstep(0.0, 0.15, uv.y) * smoothstep(1.0, 0.45, uv.y);
         if (uHasMask > 0.5) {
-          vec2 d = (vec2(n, fbm(p*1.7)) - 0.5) * 0.12 * (1.0 - uForm*0.8);
+          float settle = smoothstep(0.7, 1.0, uForm); // 1 = fully formed: crisp letters
+          vec2 d = (vec2(n, fbm(p*1.7)) - 0.5) * 0.12 * (1.0 - uForm*0.8) * (1.0 - settle);
           float m = texture2D(uMask, uv + d).a;
           float wisp = smoothstep(0.25, 0.75, fbm(uv*6.0 + vec2(0.0, -uTime*0.4)));
-          float shaped = m * (0.55 + 0.45*wisp) * smoothstep(0.0, 0.1, uv.y) * smoothstep(1.0, 0.9, uv.y);
+          float shaped = m * mix(0.55 + 0.45*wisp, 0.92 + 0.08*wisp, settle) * smoothstep(0.0, 0.1, uv.y) * smoothstep(1.0, 0.9, uv.y);
           a = mix(a, shaped, uForm);
         }
-        gl_FragColor = vec4(uColor, a * uOpacity);
+        float alpha = a * uOpacity;
+        if (alpha < uAlphaCut) discard; // lets solid text write depth, so depth of field keeps it sharp
+        gl_FragColor = vec4(uColor, alpha);
       }`,
   })
 }

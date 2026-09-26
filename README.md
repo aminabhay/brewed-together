@@ -1,4 +1,4 @@
-# Brewed Together ☕ · Abhay & Jyoti
+# Brewed Together ☕ · Jyoti & Abhay
 
 A single-page, scroll-driven 3D wedding invitation. The whole site is one continuous camera move that only ever **zooms out**: from a café wall light, to the couple, to two cups that reveal the date, to the café as a miniature diorama on a big wooden table, past six story dioramas, and out to a miniature city map of the venue.
 
@@ -33,7 +33,7 @@ Handy URL switches:
 - `sheStayed`: the years that tick by and the three office names
 - `events`: one entry per function (Haldi, Sangeet, Wedding…). `colour` is both the dress-code swatch and the map pin colour, and `mapPos` places the pin on the miniature map (`-1..1` on each axis).
 - `venue`: address, Google Maps link and embed URL, travel tabs, hotels, parking
-- `rsvp`: maximum guests, deadline, food options
+- `rsvp`: maximum guests, deadline
 - `faq`, `footer`, `theme` (outfit colours, glasses, venue model preset: `mandap | hall | garden | resort`)
 
 Pacing (how long the camera spends on each beat, camera positions, depth of field) lives in **`src/scroll/beats.ts`**: one array, top to bottom.
@@ -66,7 +66,7 @@ Until `VITE_RSVP_ENDPOINT` is set, the form **simulates** a successful submit an
 | `printer` | "receipt printer" |
 | `page` | "page flip" |
 
-Sound stays off until the guest clicks **Come in ☕**, to respect browser autoplay rules. The café ambience cross-fades into the piano from "She Stayed" onward.
+Sound stays off until the guest clicks **Come in**, to respect browser autoplay rules. The café ambience cross-fades into the piano from "She Stayed" onward.
 
 ## Share image (WhatsApp / Open Graph)
 

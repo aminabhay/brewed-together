@@ -2,7 +2,8 @@ import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { RoundedBox } from '@react-three/drei'
-import { Character, jyotiProps } from '../../components/Character'
+import { Character } from '../../components/Character'
+import { Couple } from '../../components/Couple'
 import { Bubble } from '../../components/Bubble'
 import { Desk } from '../../components/Props'
 import { canvasTexture, memoTex, textTexture, SERIF } from '../../components/textures'
@@ -19,7 +20,7 @@ function Phone() {
   })
   return (
     <group
-      position={[0.02, 1.02, 0.42]}
+      position={[0, 0.95, 0.29]}
       rotation={[-0.5, 0, 0]}
       onClick={(e) => {
         e.stopPropagation()
@@ -82,7 +83,7 @@ export default function Canteen() {
 
       {/* Jyoti with her phone, friends around her */}
       <group position={[-0.4, 0.08, 0.8]}>
-        <Character {...jyotiProps} pose="phone" idle="tilt" />
+        <Couple who="jyoti" hold="phone" />
         <Phone />
       </group>
       <Character shirt="#8A9A7B" pants="#4A4A55" hair="long" dress pose="wave" idle="laugh" position={[-1.6, 0.08, 0.2]} rotation={[0, 0.9, 0]} />

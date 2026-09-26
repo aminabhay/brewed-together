@@ -163,16 +163,23 @@ main {
   border-left: 0;
   border-radius: 0 6px 6px 0;
 }
-.scroll-cup::before {
+.scroll-cup::before,
+.scroll-cup i {
   content: '';
   position: absolute;
-  left: 8px;
-  top: -16px;
-  width: 6px;
-  height: 12px;
-  border-left: 2px solid rgba(243, 229, 208, 0.7);
+  top: -15px;
+  width: 7px;
+  height: 11px;
+  border-left: 3px solid rgba(243, 229, 208, 0.85);
   border-radius: 50%;
   animation: wisp 2s ease-in-out infinite;
+}
+.scroll-cup::before {
+  left: 4px;
+}
+.scroll-cup i {
+  left: 12px;
+  animation-delay: 0.7s;
 }
 @keyframes nudge {
   50% {

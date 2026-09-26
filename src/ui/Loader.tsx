@@ -51,7 +51,7 @@ export function Loader({ ready }: { ready: boolean }) {
         disabled={!done}
         className={`mt-6 min-h-[44px] rounded-full bg-amber px-8 py-3 font-serif text-xl text-espresso shadow-lg transition-all duration-500 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-foam ${done ? 'opacity-100' : 'pointer-events-none translate-y-2 opacity-0'}`}
       >
-        Come in ☕
+        Come in
       </button>
       <p className="mt-4 font-sans text-sm text-latte/70">Best with sound 🔊</p>
     </div>

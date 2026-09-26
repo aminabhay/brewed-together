@@ -13,7 +13,7 @@ export interface CalEvent {
 export const mainEvent = (): CalEvent => {
   const w = wedding.events.find((e) => e.id === 'wedding') ?? wedding.events[0]
   return {
-    title: `${wedding.couple.groom} & ${wedding.couple.bride}'s ${w?.name ?? 'Wedding'}`,
+    title: `${wedding.couple.bride} & ${wedding.couple.groom}'s ${w?.name ?? 'Wedding'}`,
     start: w?.startISO ?? wedding.date.iso,
     end: w?.endISO ?? wedding.date.iso,
     location: `${w?.venue ?? wedding.venue.name}, ${w?.address ?? wedding.venue.address}`,

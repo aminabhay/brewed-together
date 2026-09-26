@@ -7,8 +7,8 @@ import { Section, Sticky } from './Section'
 
 const ACTIONS: Record<string, { hint: string; label: string; run: () => void } | undefined> = {
   ch1: { hint: 'Tap the glowing desk', label: 'Show the empty desk', run: () => interactBus.deskTip() },
-  ch2: { hint: 'Tap Jyoti’s phone', label: 'Read her messages 📱', run: () => useStore.getState().setPhoneOpen(true) },
-  ch3: { hint: 'Tap the door', label: 'Knock on the door ✊', run: () => interactBus.knock() },
+  ch2: { hint: 'Tap Jyoti’s phone', label: 'Read her messages', run: () => useStore.getState().setPhoneOpen(true) },
+  ch3: { hint: 'Tap the door', label: 'Knock on the door', run: () => interactBus.knock() },
   ch4: { hint: 'Drag the red stamp onto the note', label: 'Stamp it', run: () => interactBus.stamp() },
   ch5: { hint: 'Tap the ID card', label: 'Flip the ID card', run: () => interactBus.flipCard() },
 }
@@ -38,7 +38,7 @@ function SheStayedText() {
   const { lines, finale } = wedding.sheStayed
   useEffect(() => {
     let raf = 0
-    const marks = [0.62, 0.69, 0.76, 0.86]
+    const marks = [0.6, 0.66, 0.72, 0.8]
     const loop = () => {
       const t = scrollState.local.ch6 ?? 0
       refs.current.forEach((el, i) => {
