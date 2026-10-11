@@ -21,8 +21,29 @@ const ogSaver = (): Plugin => ({
   },
 })
 
+/** Dev-only: lets an in-browser tool save a generated asset under public/ (e.g. transcoded audio). */
+const assetSaver = (): Plugin => ({
+  name: 'asset-saver',
+  apply: 'serve',
+  configureServer(server) {
+    server.middlewares.use('/__save', (req, res) => {
+      const rel = new URL(req.url ?? '', 'http://x').searchParams.get('path') ?? ''
+      if (req.method !== 'POST' || !/^[\w\-/]+\.(wav|m4a|png)$/.test(rel) || rel.includes('..')) {
+        res.statusCode = 400
+        return res.end('bad request')
+      }
+      const chunks: Buffer[] = []
+      req.on('data', (c) => chunks.push(c))
+      req.on('end', () => {
+        writeFileSync(new URL(`./public/${rel}`, import.meta.url), Buffer.concat(chunks))
+        res.end('ok')
+      })
+    })
+  },
+})
+
 export default defineConfig({
-  plugins: [react(), ogSaver()],
+  plugins: [react(), ogSaver(), assetSaver()],
   build: {
     target: 'es2020',
     chunkSizeWarningLimit: 1200,

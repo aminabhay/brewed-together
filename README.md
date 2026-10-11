@@ -106,3 +106,23 @@ src/
 - **Swapping in real models:** each diorama is a group placed by `Chapter` (or `Cafe`) at a fixed position in `three/world/layout.ts`. Replace its children with `<primitive object={useGLTF(url).scene} />` and the camera path stays the same.
 - **Quality tiers:** `detect-gpu` picks high / medium / low. High uses DPR up to 2, depth of field, bloom, chromatic aberration on fast moves, film grain and refracting rain. Medium uses DPR 1.5 with depth of field and bloom. Low uses DPR 1, no post-processing, a CSS tilt-shift blur and static rain. A `PerformanceMonitor` steps the tier down if the frame rate drops.
 - **Accessibility:** every 3D interaction also has an HTML button (cup turning also works with the arrow keys). `prefers-reduced-motion` swaps camera flights for gentle cross-fades between framed shots, and browsers without WebGL get a static illustrated version with the same content, RSVP and FAQ.
+
+## Save the Date games (`/save-the-date`)
+
+A separate, code-split page that plays a short Save the Date mini-game. Each game is a self-contained component, so you can build several and switch between them.
+
+- **Switch the live game:** change `ACTIVE_GAME` in [`src/games/registry.ts`](src/games/registry.ts).
+- **Preview any game without switching:** open `/save-the-date?game=<id>`.
+- **Add a game:** create `src/games/<id>/index.tsx` whose default export is a component taking `SaveTheDateGameProps` (`couple` + optional `onComplete`; see [`src/games/types.ts`](src/games/types.ts)), then add it to `GAMES` in the registry.
+- **Couple details** (names, date, venue, character models) come from [`src/games/coupleConfig.ts`](src/games/coupleConfig.ts), which reads `wedding.ts`, so every game stays in sync with the invitation.
+- On phones the game fills the screen; on wider screens it sits in a centred 9:16 phone-shaped stage.
+- Hosting: `vercel.json` and `public/_redirects` make `/save-the-date` work on Vercel and Netlify.
+
+### Game 1: Operation: Get Married
+
+Tap to help the groom catch the bride through an Indian-wedding obstacle course (aunties, a chai stall, a baraat, a runaway mojari, a selfie relative, shopping bags and the caterer's bill), then reveal the date under a marigold arch.
+
+- Everything you'd tweak (dialogue, colours, obstacles, pacing, outfits, audio) is in [`src/games/operation-get-married/config.ts`](src/games/operation-get-married/config.ts).
+- The chase is endless until the bride is caught: only fast tapping (about 3+ taps a second) closes the gap, and nobody catches her before `minDuration` (15 s). A typical 4–5 taps a second lands around 20–25 s. Comedy beats only appear while the groom is running fast (`obstacles.minSpeed`).
+- Characters are the same `abhay.glb` / `jyoti.glb` as the invitation. The models have no run clip, so running, looking back, ducking and stumbling are procedural (`Rig.tsx`). Any GLB with the same bone names works.
+- Sound: a footstep on every tap and stride, plus comedy effects, all synthesised in the browser. Background music is off (`audio.music: false`); set it to `true` to bring back the dhol loop and the reveal music.

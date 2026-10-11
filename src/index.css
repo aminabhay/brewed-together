@@ -354,3 +354,62 @@ main {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── /save-the-date stage ───────────────────────────────── */
+html.std-page,
+html.std-page body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #0f0709;
+}
+.std-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(122, 31, 46, 0.45), transparent 60%),
+    #0f0709;
+}
+/* phones: full screen. Wider screens: a centred 9:16 phone-shaped stage. */
+.std-stage {
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  overflow: hidden;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+@media (min-aspect-ratio: 3/4) {
+  .std-stage {
+    height: min(100svh, 940px);
+    width: calc(min(100svh, 940px) * 9 / 16);
+    border-radius: 28px;
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+}
+.std-marigold {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  animation: std-spin 2.4s linear infinite;
+}
+.std-marigold span {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #f2a03d;
+  box-shadow: 0 0 10px rgba(242, 160, 61, 0.6);
+}
+@keyframes std-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,561 @@
+/* OPERATION: GET MARRIED. Punchy comedy for the chase, quiet elegance for the reveal. */
+.ogm-root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: #fff6ea;
+  font-family: 'Inter', system-ui, sans-serif;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  background: #f4a86a;
+}
+.ogm-in,
+.ogm-out {
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ogm-out {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.ogm-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── intro ─────────────────────────────────────────────── */
+.ogm-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 28px;
+  background: #120709;
+}
+.ogm-intro-block {
+  transition: opacity 0.4s ease;
+}
+.ogm-intro-block.ogm-out {
+  opacity: 0;
+}
+.ogm-intro-lead {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(22px, 6.4vw, 30px);
+  line-height: 1.25;
+  margin-bottom: 26px;
+}
+.ogm-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ogm-checklist li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 800;
+  font-size: clamp(20px, 5.8vw, 26px);
+  border-bottom: 1px dashed rgba(255, 246, 234, 0.2);
+  padding-bottom: 8px;
+}
+.ogm-tick {
+  color: #e8a33d;
+  font-weight: 700;
+  font-size: 0.85em;
+  text-align: right;
+}
+.ogm-intro-problem {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(26px, 7.4vw, 36px);
+  text-align: center;
+}
+.ogm-intro-problem.ogm-out {
+  transform: translateY(-40%);
+}
+.ogm-skip {
+  position: absolute;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.45 !important;
+}
+.ogm-skip.ogm-out {
+  opacity: 0 !important;
+}
+
+/* ── ready: big comic titles ───────────────────────────── */
+.ogm-ready {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+.ogm-headline {
+  font-weight: 900;
+  font-size: clamp(34px, 10vw, 52px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff6ea;
+  text-shadow: 0 3px 0 #7a1f2e, 0 6px 18px rgba(58, 12, 22, 0.55);
+  padding: 0 20px;
+}
+.ogm-ready > .ogm-headline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(env(safe-area-inset-top) + 70px);
+}
+.ogm-slam {
+  animation: ogm-slam 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+@keyframes ogm-slam {
+  from {
+    opacity: 0;
+    transform: scale(1.7) rotate(-3deg);
+  }
+}
+.ogm-catch {
+  /* at the top, so the groom and bride stay in view */
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(env(safe-area-inset-top) + 64px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.ogm-start {
+  /* down by the groom (it's what makes him run), but below his feet so he stays visible */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 24%; /* by the groom's lower back: it's what makes him run */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.ogm-cta {
+  margin-top: 6px;
+  padding: 14px 30px;
+  border-radius: 999px;
+  background: #7a1f2e;
+  color: #fff6ea;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  font-size: 16px;
+  box-shadow: 0 10px 30px -8px rgba(58, 12, 22, 0.7);
+  animation: ogm-pulse 1.1s ease-in-out infinite;
+}
+@keyframes ogm-pulse {
+  50% {
+    transform: scale(1.07);
+    box-shadow: 0 0 0 10px rgba(122, 31, 46, 0.25);
+  }
+}
+.ogm-hint {
+  max-width: 340px;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3b1a12;
+  background: rgba(255, 246, 234, 0.85);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+/* ── HUD ───────────────────────────────────────────────── */
+.ogm-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  pointer-events: none;
+}
+.ogm-hud button {
+  pointer-events: auto;
+}
+.ogm-topright {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top));
+  right: 12px;
+  z-index: 50;
+}
+.ogm-icon-btn {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff6ea;
+  background: rgba(42, 15, 24, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.ogm-progress {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: min(290px, calc(100% - 48px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  gap: 6px;
+  padding: 7px 14px 7px 9px;
+  border-radius: 18px;
+  background: rgba(42, 15, 24, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.ogm-progress-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #e8a33d;
+}
+.ogm-progress-text {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  animation: ogm-pop 0.35s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+.ogm-progress--hot .ogm-progress-text {
+  font-size: 20px;
+  font-weight: 900;
+  color: #ffd27a;
+}
+.ogm-progress--hot svg {
+  animation: ogm-beat 0.5s ease-in-out infinite;
+}
+@keyframes ogm-beat {
+  50% {
+    transform: scale(1.2);
+  }
+}
+@keyframes ogm-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+.ogm-toast {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translateX(-50%) rotate(-3deg);
+  padding: 8px 18px;
+  border-radius: 12px;
+  background: #e8a33d;
+  color: #3b1a12;
+  font-weight: 900;
+  font-size: clamp(22px, 7vw, 32px);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-shadow: 0 6px 0 #7a1f2e, 0 14px 30px -10px rgba(0, 0, 0, 0.5);
+  animation: ogm-toast 1.2s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+.ogm-toast--big {
+  top: 22%;
+  font-size: clamp(34px, 11vw, 54px);
+  background: #7a1f2e;
+  color: #fff6ea;
+  box-shadow: 0 6px 0 #3b0d16, 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+  animation-duration: 1.5s;
+}
+@keyframes ogm-toast {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) rotate(-3deg) scale(0.5);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-50%) rotate(-3deg) scale(1.08);
+  }
+  25% {
+    transform: translateX(-50%) rotate(-3deg) scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) rotate(-3deg) scale(0.96) translateY(-10px);
+  }
+}
+.ogm-idle {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  top: calc(env(safe-area-inset-top) + 84px);
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(255, 246, 234, 0.95);
+  color: #3b1a12;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20px;
+  text-align: center;
+  white-space: pre-line;
+  animation: ogm-pop 0.4s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+.ogm-speedlines {
+  position: absolute;
+  inset: -20%;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.55) 0deg 1.2deg, transparent 1.2deg 9deg);
+  -webkit-mask-image: radial-gradient(circle at 50% 55%, transparent 30%, #000 70%);
+  mask-image: radial-gradient(circle at 50% 55%, transparent 30%, #000 70%);
+  animation: ogm-lines 0.25s steps(3) infinite;
+}
+.ogm-speedlines.is-on {
+  opacity: 0.6;
+}
+.ogm-speedlines.is-soft {
+  opacity: 0.25;
+}
+@keyframes ogm-lines {
+  to {
+    transform: rotate(3deg) scale(1.03);
+  }
+}
+.ogm-ripple {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 246, 234, 0.9);
+  animation: ogm-ripple 0.5s ease-out forwards;
+}
+@keyframes ogm-ripple {
+  from {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* ── speech bubbles in the 3D scene ────────────────────── */
+.ogm-bubble {
+  position: relative;
+  white-space: nowrap;
+  padding: 7px 12px;
+  border-radius: 14px;
+  background: #fff6ea;
+  color: #3b1a12;
+  border: 2px solid #3b1a12;
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.45);
+  animation: ogm-pop 0.3s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+  transform: translateY(-50%);
+}
+.ogm-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 18px;
+  width: 12px;
+  height: 12px;
+  background: #fff6ea;
+  border-right: 2px solid #3b1a12;
+  border-bottom: 2px solid #3b1a12;
+  transform: rotate(45deg);
+}
+.ogm-bubble--wide {
+  white-space: pre-line;
+  width: max-content;
+  max-width: 230px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.3;
+  padding: 9px 14px;
+}
+.ogm-bubble--wide::after {
+  left: calc(50% - 6px);
+}
+.ogm-bubble--right::after {
+  left: auto;
+  right: 18px;
+}
+
+/* ── the catch: letterbox ──────────────────────────────── */
+.ogm-letterbox span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  z-index: 22;
+  background: #0c0507;
+  transition: height 0.8s cubic-bezier(0.6, 0, 0.2, 1);
+}
+.ogm-letterbox span:first-child {
+  top: 0;
+}
+.ogm-letterbox span:last-child {
+  bottom: 0;
+}
+.ogm-letterbox.is-on span {
+  height: 11%;
+}
+
+/* ── the reveal: elegant, romantic, quiet ──────────────── */
+.ogm-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: calc(56px + env(safe-area-inset-top)) 24px calc(26px + env(safe-area-inset-bottom));
+  background:
+    linear-gradient(to bottom, rgba(26, 8, 14, 0.82) 0%, rgba(26, 8, 14, 0.25) 34%, transparent 46%),
+    linear-gradient(to top, rgba(26, 8, 14, 0.9) 0%, rgba(26, 8, 14, 0.3) 30%, transparent 42%);
+  cursor: default;
+  text-align: center;
+}
+.ogm-reveal-top,
+.ogm-reveal-bottom,
+.ogm-date,
+.ogm-place {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 1.4s ease, transform 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ogm-reveal-top.is-in,
+.ogm-reveal-bottom.is-in,
+.ogm-date.is-in,
+.ogm-place.is-in {
+  opacity: 1;
+  transform: none;
+}
+.ogm-kicker {
+  font-size: 12px;
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  color: #e8c27a;
+  font-weight: 600;
+}
+.ogm-names {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0 0.22em;
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: clamp(48px, 15vw, 72px);
+  line-height: 0.9;
+  color: #fff6ea;
+  text-shadow: 0 2px 24px rgba(232, 163, 61, 0.35);
+}
+.ogm-amp {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.55em;
+  color: #e8c27a;
+}
+.ogm-date {
+  margin-top: 14px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(25px, 7.4vw, 32px);
+  font-weight: 600;
+  transition-delay: 0.1s;
+}
+.ogm-place {
+  margin-top: 4px;
+  font-size: clamp(16px, 4.6vw, 19px);
+  letter-spacing: 0.08em;
+  color: rgba(255, 246, 234, 0.85);
+  transition-delay: 0.4s;
+}
+.ogm-line {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  word-spacing: 0.08em;
+  font-size: clamp(21px, 6vw, 27px);
+  line-height: 1.2;
+  color: #fff6ea;
+  text-shadow: 0 2px 18px rgba(232, 163, 61, 0.3);
+  white-space: pre-line;
+}
+.ogm-caught {
+  margin-top: 14px;
+  font-weight: 700;
+  font-size: 13px;
+  color: rgba(255, 246, 234, 0.85);
+  letter-spacing: 0.02em;
+}
+.ogm-stat {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.45;
+  white-space: pre-line;
+  color: rgba(255, 246, 234, 0.7);
+}
+.ogm-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.ogm-btn {
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 246, 234, 0.45);
+  color: #fff6ea;
+  font-weight: 700;
+  font-size: 15px;
+  background: rgba(255, 246, 234, 0.06);
+}
+.ogm-btn--primary {
+  border: none;
+  background: linear-gradient(180deg, #f0b85a, #e8a33d);
+  color: #3b1a12;
+  box-shadow: 0 10px 30px -10px rgba(232, 163, 61, 0.7);
+}
+.ogm-links {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+.ogm-link {
+  min-height: 36px;
+  font-size: 12px;
+  color: rgba(255, 246, 234, 0.7);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ogm-speedlines {
+    display: none;
+  }
+}

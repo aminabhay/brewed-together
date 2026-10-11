@@ -1,0 +1,3 @@
+{
+  "rewrites": [{ "source": "/save-the-date", "destination": "/index.html" }]
+}

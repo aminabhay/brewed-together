@@ -36,7 +36,7 @@ export function seatHeight(who: Who, size = 1) {
 /** Jyoti's skin tone: lightness of shadows → highlights, and saturation. Tweak freely; edits apply live. */
 const SKIN = { shadow: 0.66, highlight: 0.8, saturation: 0.46 }
 
-function fairerSkin(scene: THREE.Object3D) {
+export function fairerSkin(scene: THREE.Object3D) {
   const c = new THREE.Color()
   const hsl = { h: 0, s: 0, l: 0 }
   const key = JSON.stringify(SKIN)
@@ -67,7 +67,7 @@ function fairerSkin(scene: THREE.Object3D) {
  * Give one placement its own geometry and recolour the pink kurti (pinks between knee and shoulder
  * height in the bind pose, so lips/face stay untouched), keeping the model's shading.
  */
-function recolourKurti(model: THREE.Object3D, colour: string) {
+export function recolourKurti(model: THREE.Object3D, colour: string) {
   const target = { h: 0, s: 0, l: 0 }
   new THREE.Color(colour).getHSL(target, THREE.SRGBColorSpace)
   const c = new THREE.Color()
