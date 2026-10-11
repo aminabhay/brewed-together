@@ -11,7 +11,7 @@ const path = location.pathname.replace(/\/+$/, '')
 const isOg = new URLSearchParams(location.search).has('og')
 
 function Root() {
-  if (path === '/save-the-date')
+  if (/^\/save-the-date(-\d+)?$/.test(path))
     return (
       <Suspense fallback={null}>
         <SaveTheDatePage />

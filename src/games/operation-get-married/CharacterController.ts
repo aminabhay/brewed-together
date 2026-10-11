@@ -2,22 +2,9 @@ import { gameConfig, type ObstacleKind } from './config'
 import { sim, useGame, type ObstacleInstance, type Phase } from './GameState'
 import { audio, buzz } from './AudioManager'
 
-/** Where each character is and what they're doing this frame. Written here, rendered by Groom/Bride. */
-export interface Pose {
-  x: number
-  y: number
-  z: number
-  yaw: number // world yaw; Math.PI = facing down the street (away from the camera)
-  clip: string // animation clip when not running
-  run: number // 0–1 blend into the procedural run cycle
-  speed: number // m/s, sets the run cadence
-  rapid: number // 0–1 cartoon sprint
-  lookBack: number // 0–1 glance over the shoulder
-  crouch: number
-  reach: number
-  stumble: number
-  visible: boolean
-}
+import type { Pose } from '../shared/pose'
+export type { Pose }
+
 const pose = (): Pose => ({ x: 0, y: 0, z: 0, yaw: Math.PI, clip: 'Idle', run: 0, speed: 0, rapid: 0, lookBack: 0, crouch: 0, reach: 0, stumble: 0, visible: true })
 export const groom = pose()
 export const bride = pose()

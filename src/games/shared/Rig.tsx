@@ -6,7 +6,7 @@ import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js
 import { fairerSkin, recolourKurti } from '../../three/components/Couple'
 import { Character } from '../../three/components/Character'
 import { ErrorBoundary } from '../../ui/ErrorBoundary'
-import type { Pose } from './CharacterController'
+import type { Pose } from './pose'
 
 /**
  * A rigged GLB character driven by a Pose.

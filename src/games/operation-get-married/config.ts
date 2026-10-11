@@ -90,7 +90,7 @@ export const gameConfig = {
     brideCaught: 'It took you long enough.',
     groomCaught: 'So… wanna get married?',
     obstacles: {
-      aunties: { bubble: 'Beta, salary kitni hai?', toast: 'AUNTIES AHEAD!' },
+      aunties: { bubble: 'Beta, job kaha karte ho?', toast: 'AUNTIES AHEAD!' },
       chai: { bubble: 'Cutting chai, saab?', toast: 'NOT NOW.' },
       baraat: { bubble: 'Dhol baje!', toast: 'BARAAT CROSSING!' },
       shoe: { bubble: '', toast: 'MOJARI DOWN!' },
@@ -111,7 +111,7 @@ export const gameConfig = {
   audio: {
     /** their real voices for the catch. `speechEnd` = when the words finish in the clip (s), so the bubble stays up just as long */
     voices: {
-      bride: { src: '/audio/game/jyoti.m4a', speechEnd: 1.85 },
+      bride: { src: '/audio/game/jyoti.m4a', speechEnd: 2.7 },
       groom: { src: '/audio/game/abhay.m4a', speechEnd: 4.1 },
     },
     music: false,

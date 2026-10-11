@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from 'react'
-import { GAMES, ACTIVE_GAME, type GameId } from '../games/registry'
+import { GAMES, ROUTES, ACTIVE_GAME, type GameId } from '../games/registry'
 import { coupleConfig } from '../games/coupleConfig'
 import { ErrorBoundary } from '../ui/ErrorBoundary'
 import { StageLoader } from '../games/StageLoader'
@@ -7,7 +7,8 @@ import { StageLoader } from '../games/StageLoader'
 /** /save-the-date: shows the active game in a phone-shaped stage (full screen on phones). */
 export default function SaveTheDatePage() {
   const requested = new URLSearchParams(location.search).get('game') as GameId | null
-  const id: GameId = requested && requested in GAMES ? requested : ACTIVE_GAME
+  const routed = ROUTES[location.pathname.replace(/\/+$/, '')] ?? ACTIVE_GAME
+  const id: GameId = requested && requested in GAMES ? requested : routed
   const game = GAMES[id]
   const Game = game.component
 

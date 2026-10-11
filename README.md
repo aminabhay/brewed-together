@@ -116,7 +116,8 @@ A separate, code-split page that plays a short Save the Date mini-game. Each gam
 - **Add a game:** create `src/games/<id>/index.tsx` whose default export is a component taking `SaveTheDateGameProps` (`couple` + optional `onComplete`; see [`src/games/types.ts`](src/games/types.ts)), then add it to `GAMES` in the registry.
 - **Couple details** (names, date, venue, character models) come from [`src/games/coupleConfig.ts`](src/games/coupleConfig.ts), which reads `wedding.ts`, so every game stays in sync with the invitation.
 - On phones the game fills the screen; on wider screens it sits in a centred 9:16 phone-shaped stage.
-- Hosting: `vercel.json` and `public/_redirects` make `/save-the-date` work on Vercel and Netlify.
+- **Trial slots:** `ROUTES` in the registry maps extra paths to games, e.g. `/save-the-date-2` plays Wedding Snake while `/save-the-date` keeps the live game.
+- Hosting: `vercel.json` and `public/_redirects` make `/save-the-date` and `/save-the-date-2` work on Vercel and Netlify.
 
 ### Game 1: Operation: Get Married
 
@@ -126,3 +127,13 @@ Tap to help the groom catch the bride through an Indian-wedding obstacle course 
 - The chase is endless until the bride is caught: only fast tapping (about 3+ taps a second) closes the gap, and nobody catches her before `minDuration` (15 s). A typical 4–5 taps a second lands around 20–25 s. Comedy beats only appear while the groom is running fast (`obstacles.minSpeed`).
 - Characters are the same `abhay.glb` / `jyoti.glb` as the invitation. The models have no run clip, so running, looking back, ducking and stumbling are procedural (`Rig.tsx`). Any GLB with the same bone names works.
 - Sound: a footstep on every tap and stride, plus comedy effects, all synthesised in the browser. Background music is off (`audio.music: false`); set it to `true` to bring back the dhol loop and the reveal music.
+
+### Game 2: Wedding Snake (`/save-the-date-2`)
+
+You play a wedding guest (whoever opened the link) helping Jyoti & Abhay, who wait at the mandap. Steer through a wedding village (mandap, bazaar, fairy lights) collecting what the wedding needs while a procession of found things (and a couple of relatives) trails behind you. Wrapped parcels hide distractions: the office laptop, a PlayStation controller, a credit card bill and so on. You only see what's inside when you get close. The rings always come last. Then the finale: the lights come on, everything forms an arch over the mandap, and the date is revealed.
+
+- **Controls:** swipe to turn (keep dragging to chain turns), tap on a side of the player to head that way, or use the arrow keys / WASD.
+- **Rules:** 3 hearts; a wrong item freezes you for a second with a joke (some also slow you down or flash FOCUS.). Losing all 3 hearts starts a fresh, reshuffled run. Bonuses: cutting chai (speed boost), Mummy calling (lights up the rings), Google Maps (arrow to the next item).
+- Everything is in [`src/games/wedding-snake/config.ts`](src/games/wedding-snake/config.ts): which items appear and how many, the wrong-item jokes and effects, bonuses, speeds, arena size, colours, all text, and the end-screen titles (`weddingTitle`). `guest` sets how your guest looks (kurta colour, hair) and the YOU tag shown at the start.
+- Each game uses 6 random items plus the rings, and 5 distractions, placed at random. A perfect run takes about 12 s, and most people will take 20–35 s.
+- The end screen has a single Play again button.

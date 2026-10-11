@@ -4,7 +4,7 @@ import type * as THREE from 'three'
 import { gameConfig } from './config'
 import { bride } from './CharacterController'
 import { useGame } from './GameState'
-import { Rig } from './Rig'
+import { Rig } from '../shared/Rig'
 import { SpeechBubble } from './SpeechBubble'
 import { Blob } from '../../three/components/Props'
 

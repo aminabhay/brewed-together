@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/save-the-date", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/save-the-date", "destination": "/index.html" },
+    { "source": "/save-the-date-2", "destination": "/index.html" }
+  ]
 }
