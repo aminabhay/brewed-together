@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { wedding } from '../content/wedding'
 import { Countdown } from './Countdown'
-import { downloadIcs, googleCalendarUrl, mainEvent } from './calendar'
+import { googleCalendarUrl, mainEvent } from './calendar'
 
 /** Static illustrated version for browsers without WebGL. Same story, same RSVP & FAQ (rendered by App). */
 export function FallbackStory() {
@@ -33,9 +33,6 @@ export function FallbackStory() {
               <a className="btn" href={googleCalendarUrl(mainEvent())} target="_blank" rel="noreferrer">
                 Add to Google Calendar
               </a>
-              <button className="btn-ghost !text-espresso" onClick={() => downloadIcs(mainEvent())}>
-                Download .ics
-              </button>
             </div>
           </div>
         ) : (

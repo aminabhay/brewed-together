@@ -4,7 +4,7 @@ import { useStore } from '../state/useStore'
 import { cupsBus } from '../state/cupsBus'
 import { Section, Sticky } from './Section'
 import { Countdown } from './Countdown'
-import { downloadIcs, googleCalendarUrl, mainEvent } from './calendar'
+import { googleCalendarUrl, mainEvent } from './calendar'
 
 export function CupsSection() {
   const revealed = useStore((s) => s.dateRevealed)
@@ -52,9 +52,6 @@ export function CupsSection() {
                 <a className="btn" href={googleCalendarUrl(mainEvent())} target="_blank" rel="noreferrer">
                   Add to Google Calendar
                 </a>
-                <button className="btn-ghost" onClick={() => downloadIcs(mainEvent())}>
-                  Download .ics
-                </button>
               </div>
             </div>
           )}

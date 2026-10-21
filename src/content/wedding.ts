@@ -203,12 +203,13 @@ export const wedding = {
   ],
 
   footer: {
-    hashtag: '#BrewedTogether', // PLACEHOLDER {{WEDDING_HASHTAG}}
     contacts: [
       { name: 'Akshay · Abhay’s side', phone: '+91 98694 83112' },
       { name: 'Dinesh · Jyoti’s side', phone: '976941186' }, // CHECK: only 9 digits as given
     ],
     madeBy: 'Made with love (and a lot of coffee) by Weddingo',
+    madeByBrand: 'Weddingo',
+    madeByUrl: 'https://myweddingo.com',
     replay: 'Replay from the first sip',
   },
 

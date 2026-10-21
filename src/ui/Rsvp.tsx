@@ -3,12 +3,16 @@ import { wedding } from '../content/wedding'
 import { useStore } from '../state/useStore'
 import { play } from '../audio/sounds'
 import { Section } from './Section'
+import { RsvpError, submitRsvp, supabaseReady } from './rsvpApi'
 
 const ENDPOINT = import.meta.env.VITE_RSVP_ENDPOINT
 
 interface Form {
   name: string
+  /** the one way to reach the guest (the database stores exactly one) */
+  contactType: 'phone' | 'email'
   phone: string
+  email: string
   count: number
   events: string[]
   note: string
@@ -41,14 +45,20 @@ export function Rsvp() {
   const rsvp = useStore((s) => s.rsvp)
   const setRsvp = useStore((s) => s.setRsvp)
   const { maxGuests, deadline } = wedding.rsvp
-  const [f, setF] = useState<Form>({ name: guest, phone: '', count: 1, events: wedding.events.map((e) => e.id), note: '' })
+  const [f, setF] = useState<Form>({ name: guest, contactType: 'phone', phone: '', email: '', count: 1, events: wedding.events.map((e) => e.id), note: '' })
   const [err, setErr] = useState<Record<string, string>>({})
   const busy = useRef(false)
 
   const validate = () => {
     const e: Record<string, string> = {}
     if (f.name.trim().length < 2) e.name = 'Please tell us your name.'
-    if (f.phone && !/^[+\d][\d\s-]{6,16}$/.test(f.phone.trim())) e.phone = 'That number looks a little off.'
+    if (f.contactType === 'phone') {
+      if (!f.phone.trim()) e.phone = 'Please add your phone number.'
+      else if (!/^[+\d][\d\s-]{6,16}$/.test(f.phone.trim())) e.phone = 'That number looks a little off.'
+    } else {
+      if (!f.email.trim()) e.email = 'Please add your email.'
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) e.email = 'That email looks a little off.'
+    }
     if (!f.events.length) e.events = 'Pick at least one event (or tell us in the note!).'
     setErr(e)
     return !Object.keys(e).length
@@ -61,19 +71,25 @@ export function Rsvp() {
     setRsvp({ status: 'sending', error: undefined })
     const payload = { ...f, name: f.name.trim(), events: f.events.join(', '), submittedAt: new Date().toISOString(), invite: guest }
     try {
-      if (ENDPOINT) {
+      if (supabaseReady) {
+        await submitRsvp({ fullName: payload.name, contactType: f.contactType, contact: f.contactType === 'phone' ? f.phone : f.email, partySize: f.count, events: f.events, message: f.note })
+      } else if (ENDPOINT) {
         // text/plain avoids a CORS preflight, which Apps Script can't answer
         const res = await fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
         const data = await res.json().catch(() => ({ ok: res.ok }))
         if (!res.ok || data.ok === false) throw new Error(data.error || `HTTP ${res.status}`)
       } else {
-        console.info('[rsvp] VITE_RSVP_ENDPOINT not set; simulating success', payload)
+        console.info('[rsvp] Supabase not configured; simulating success', payload)
         await new Promise((r) => setTimeout(r, 900))
       }
       setRsvp({ status: 'done', name: payload.name, count: f.count })
       play('printer', 0.6)
     } catch (e) {
-      setRsvp({ status: 'error', error: 'We couldn’t send your order. Check your connection and try again?' })
+      if (e instanceof RsvpError && e.field) {
+        // already RSVP'd with this phone / email: show it on the field
+        setErr({ [e.field]: e.message })
+        setRsvp({ status: 'idle' })
+      } else setRsvp({ status: 'error', error: 'We couldn’t send your order. Check your connection and try again?' })
     } finally {
       busy.current = false
     }
@@ -112,11 +128,28 @@ export function Rsvp() {
                 <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} autoComplete="name" required aria-invalid={!!err.name} />
                 {err.name && <em>{err.name}</em>}
               </label>
-              <label className="field">
-                <span>Phone</span>
-                <input value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} inputMode="tel" autoComplete="tel" aria-invalid={!!err.phone} />
-                {err.phone && <em>{err.phone}</em>}
-              </label>
+              <fieldset className="field">
+                <legend>How can we reach you? *</legend>
+                <div className="mb-2 flex gap-2" role="radiogroup" aria-label="Contact by">
+                  {(['phone', 'email'] as const).map((t) => (
+                    <label key={t} className={`flex min-h-[44px] cursor-pointer items-center rounded-full border px-4 font-sans text-sm ${f.contactType === t ? 'border-espresso bg-espresso text-foam' : 'border-mocha/40 text-espresso'}`}>
+                      <input type="radio" name="contact-type" className="sr-only" checked={f.contactType === t} onChange={() => { setF({ ...f, contactType: t }); setErr({}) }} />
+                      {t === 'phone' ? 'Phone' : 'Email'}
+                    </label>
+                  ))}
+                </div>
+                {f.contactType === 'phone' ? (
+                  <>
+                    <input value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} inputMode="tel" autoComplete="tel" required aria-label="Phone number" aria-invalid={!!err.phone} />
+                    {err.phone && <em>{err.phone}</em>}
+                  </>
+                ) : (
+                  <>
+                    <input type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} inputMode="email" autoComplete="email" required aria-label="Email" aria-invalid={!!err.email} />
+                    {err.email && <em>{err.email}</em>}
+                  </>
+                )}
+              </fieldset>
 
               <fieldset className="field">
                 <legend>How many cups?</legend>

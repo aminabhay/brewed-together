@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { wedding } from '../content/wedding'
 import { useStore } from '../state/useStore'
 import { Section } from './Section'
-import { downloadIcs, googleCalendarUrl, type CalEvent } from './calendar'
+import { googleCalendarUrl, type CalEvent } from './calendar'
 
 function LazyMap() {
   const ref = useRef<HTMLDivElement>(null)
@@ -129,12 +129,6 @@ export function Venue({ staticMode = false }: { staticMode?: boolean }) {
                 <div className="mt-3 flex flex-wrap gap-2" onClick={(ev) => ev.stopPropagation()}>
                   <a className="btn-small" href={googleCalendarUrl(cal)} target="_blank" rel="noreferrer">
                     + Google Calendar
-                  </a>
-                  <button className="btn-small" onClick={() => downloadIcs(cal)}>
-                    .ics
-                  </button>
-                  <a className="btn-small" href={e.mapsUrl} target="_blank" rel="noreferrer">
-                    Directions
                   </a>
                   <button className="btn-small" onClick={() => setFocus(i)} aria-label={`Show ${e.name} on the map`}>
                     📍 On the map

@@ -118,6 +118,27 @@ function Shop({ name }: { name: string }) {
 }
 
 /** 2 · RIIDL, Somaiya College: cream walls, frosted window grid, big pillar, orange-and-wood cubicles. */
+/** The riidl logo on a white plaque (logo file: public/logos/riidl.png). */
+function RiidlLogo({ position, rotationY = 0, scale = 1 }: { position: [number, number, number]; rotationY?: number; scale?: number }) {
+  const tex = useMemo(() => {
+    const t = new THREE.TextureLoader().load(`${import.meta.env.BASE_URL}logos/riidl.png`)
+    t.colorSpace = THREE.SRGBColorSpace
+    t.anisotropy = 4
+    return t
+  }, [])
+  return (
+    <group position={position} rotation={[0, rotationY, 0]} scale={scale}>
+      <mesh material={mat('#FFFFFF', { rough: 0.6 })}>
+        <boxGeometry args={[1.5, 1.12, 0.05]} />
+      </mesh>
+      <mesh position={[0, 0, 0.03]}>
+        <planeGeometry args={[1.4, 1.05]} />
+        <meshBasicMaterial map={tex} transparent toneMapped={false} />
+      </mesh>
+    </group>
+  )
+}
+
 function Cubicles({ name }: { name: string }) {
   const wood = mat('#C99A5B', { rough: 0.7 })
   const orange = mat('#D9772B', { rough: 0.8 })
@@ -170,6 +191,8 @@ function Cubicles({ name }: { name: string }) {
         </group>
       ))}
       <NameSign name={name} accent="#C0662A" position={[LEFT + 0.12, 3.0, 1.2]} side />
+      {/* riidl logo on the front cubicle partition, facing the viewer */}
+      <RiidlLogo position={[-2.9, 0.7, 2.25]} scale={0.72} />
     </group>
   )
 }

@@ -37,12 +37,12 @@ export function Loader({ ready }: { ready: boolean }) {
     >
       <div className="relative h-40 w-40" aria-hidden>
         <div className="loader-steam" />
-        <div className="absolute bottom-3 left-1/2 h-28 w-28 -translate-x-1/2 overflow-hidden rounded-b-[2.8rem] rounded-t-md border-4 border-latte bg-espresso/40">
+        <div className="absolute bottom-[3.4rem] -right-1 h-12 w-9 rounded-r-full border-4 border-l-0 border-latte" />
+        <div className="absolute bottom-3 left-1/2 h-28 w-28 -translate-x-1/2 overflow-hidden rounded-b-[2.8rem] rounded-t-md border-4 border-latte bg-espresso">
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#3a2012] to-mocha transition-[height] duration-200" style={{ height: `${pct}%` }}>
             {done && <div className="latte-heart" />}
           </div>
         </div>
-        <div className="absolute bottom-[3.6rem] right-2 h-12 w-9 rounded-r-full border-4 border-l-0 border-latte" />
         <div className="absolute bottom-0 left-1/2 h-3 w-36 -translate-x-1/2 rounded-full bg-latte/80" />
       </div>
       <p className="mt-6 font-hand text-3xl" aria-live="polite">{done ? 'Freshly brewed.' : `Brewing… ${pct}%`}</p>

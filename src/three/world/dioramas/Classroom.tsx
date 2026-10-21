@@ -144,7 +144,7 @@ export default function Classroom() {
     <Chapter id="ch1">
       <Room w={9} d={7} color="#EDE3D1" floor="#A88B6C" />
       <Whiteboard />
-      <Couple who="abhay" action="Present" position={[2.2, 0.08, -2.3]} rotation={[0, -0.5, 0]} />
+      <Couple who="abhay" action="Present" holding="tablet" position={[2.2, 0.08, -2.3]} rotation={[0, -0.5, 0]} />
       {ROWS.map((z, r) =>
         COLS.map((x, c) => (r === EMPTY.r && c === EMPTY.c ? null : <Desk key={`${r}${c}`} position={[x, 0.08, z]} />)),
       )}

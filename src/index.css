@@ -218,7 +218,17 @@ main {
   transform: translateX(-50%);
   background: radial-gradient(closest-side, rgba(255, 248, 238, 0.35), transparent);
   filter: blur(6px);
-  animation: wisp 2.2s ease-in-out infinite;
+  animation: steam-fade 2.6s ease-in-out infinite;
+}
+/* loader steam: just breathes in and out, no drift or turn */
+@keyframes steam-fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 .latte-heart {
   position: absolute;

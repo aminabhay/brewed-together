@@ -38,18 +38,22 @@ Handy URL switches:
 
 Pacing (how long the camera spends on each beat, camera positions, depth of field) lives in **`src/scroll/beats.ts`**: one array, top to bottom.
 
-## RSVP → Google Sheet
+## RSVP → Supabase
 
-1. Create a Google Sheet, then open **Extensions → Apps Script**.
-2. Paste in [`docs/rsvp-apps-script.js`](docs/rsvp-apps-script.js) and save.
-3. **Deploy → New deployment → Web app**, with *Execute as: Me* and *Who has access: Anyone*. Authorise it and copy the `/exec` URL.
-4. Put the URL in `.env` (copy it from `.env.example`):
+RSVPs are saved to the `public.rsvps` table in Supabase ([`src/ui/rsvpApi.ts`](src/ui/rsvpApi.ts)). Each one stores the name, phone, optional email, party size, events and note, tagged with this wedding's `customer_id`.
+
+1. In Supabase → **SQL Editor**, run [`docs/supabase-rsvp.sql`](docs/supabase-rsvp.sql) once. It adds this wedding to `customers`, adds the unique indexes that stop the same phone number or email from RSVPing twice, and lets the public anon key insert RSVPs (but not read them).
+2. Put your project's values in `.env` (from **Project Settings → API**):
    ```bash
-   VITE_RSVP_ENDPOINT=https://script.google.com/macros/s/XXXX/exec
+   VITE_SUPABASE_URL=https://xxxx.supabase.co
+   VITE_SUPABASE_ANON_KEY=eyJ...
+   VITE_SUPABASE_CUSTOMER_ID=jyotiwedsabhay
    ```
-5. Rebuild or redeploy. Each RSVP becomes a new row in the `RSVPs` tab.
+3. Restart `npm run dev` (Vite only reads `.env` when it starts), or redeploy.
 
-Until `VITE_RSVP_ENDPOINT` is set, the form **simulates** a successful submit and logs the payload to the console, so you can design against it without a backend. The form validates its inputs, blocks double submits and shows a retry message if the request fails.
+Phone numbers are compared without spaces, dashes, `+91` or a leading `0`, and emails without case, so `98694 83112` and `+91-9869483112` count as the same number. A duplicate shows *"This phone number has already been used to RSVP."* under the field.
+
+Until Supabase is configured, the form **simulates** a successful submit and logs the payload to the console. (The older Google Sheet option, `VITE_RSVP_ENDPOINT` with [`docs/rsvp-apps-script.js`](docs/rsvp-apps-script.js), still works as a fallback when Supabase isn't set.)
 
 ## Audio
 
@@ -83,7 +87,7 @@ Once the site is live, set absolute URLs for `og:image` / `twitter:image` in `in
 ## Deploy to Vercel
 
 1. Push the repo to GitHub and import it in Vercel. It autodetects Vite: build `npm run build`, output `dist`.
-2. Add the `VITE_RSVP_ENDPOINT` environment variable in the Vercel project settings.
+2. Add `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` and `VITE_SUPABASE_CUSTOMER_ID` in the Vercel project settings (Settings → Environment Variables), then redeploy.
 3. Deploy. Netlify works the same way (build `npm run build`, publish `dist`).
 
 ## How it's put together

@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js'
 import { Character, abhayProps, jyotiProps, type Pose } from './Character'
 import { ErrorBoundary } from '../../ui/ErrorBoundary'
+import { canvasTexture, memoTex, SANS } from './textures'
 
 /**
  * Abhay & Jyoti as their rigged, animated models (public/models/*.glb).
@@ -111,6 +112,8 @@ export interface CoupleProps {
   anim?: { walk?: number; action?: CoupleAction }
   /** recolour Jyoti's (pink) kurti for this placement only, e.g. '#4F8A4B' for a green kurti */
   kurti?: string
+  /** something held in the right hand: 'tablet' = a tablet with its screen turned to face the audience */
+  holding?: 'tablet'
   /** size multiplier on top of the character's standard height */
   size?: number
   position?: [number, number, number]
@@ -125,6 +128,49 @@ const PHONE_UPPER_L = qx(-0.45).multiply(qz(0.3))
 const PHONE_UPPER_R = qx(-0.45).multiply(qz(-0.3))
 const PHONE_FORE = qx(-1.35)
 
+const handPos = new THREE.Vector3()
+/** from the wrist to the middle of the tablet, in the character's own space */
+const TABLET_OFFSET = new THREE.Vector3(0, 0.16, 0.09)
+
+/** A tablet showing a little web page, screen facing +z (the way the character faces). */
+function Tablet() {
+  const screen = useMemo(
+    () =>
+      memoTex('tablet-screen', () =>
+        canvasTexture(512, 360, (ctx, w, h) => {
+          ctx.fillStyle = '#FFFFFF'
+          ctx.fillRect(0, 0, w, h)
+          ctx.fillStyle = '#2F5DA8'
+          ctx.fillRect(0, 0, w, 54)
+          ctx.fillStyle = '#FFFFFF'
+          ctx.font = `700 28px ${SANS}`
+          ctx.fillText('hello, web', 22, 37)
+          ctx.fillStyle = '#F4C542'
+          ctx.fillRect(22, 80, 200, 120)
+          ctx.fillStyle = '#B03A2E'
+          ctx.fillRect(242, 80, 248, 54)
+          ctx.fillStyle = '#2F8A4E'
+          ctx.fillRect(242, 146, 248, 54)
+          ctx.fillStyle = '#CBD2DC'
+          ;[226, 256, 286].forEach((y, i) => ctx.fillRect(22, y, 468 - i * 90, 16))
+        }),
+      ),
+    [],
+  )
+  return (
+    <group rotation={[-0.15, 0, 0]} scale={1.3}>
+      <mesh>
+        <boxGeometry args={[0.42, 0.3, 0.02]} />
+        <meshStandardMaterial color="#1F2430" roughness={0.4} />
+      </mesh>
+      <mesh position={[0, 0, 0.0115]}>
+        <planeGeometry args={[0.38, 0.26]} />
+        <meshBasicMaterial map={screen} toneMapped={false} />
+      </mesh>
+    </group>
+  )
+}
+
 function isShown(o: THREE.Object3D | null) {
   while (o) {
     if (!o.visible) return false
@@ -134,7 +180,7 @@ function isShown(o: THREE.Object3D | null) {
 }
 
 const CoupleModel = forwardRef<THREE.Group, CoupleProps>(function CoupleModel(
-  { who, action = 'Idle', sit, hold, reach = [0.75, 0.85], flourish = false, anim, size = 1, kurti, position, rotation },
+  { who, action = 'Idle', sit, hold, reach = [0.75, 0.85], flourish = false, anim, size = 1, kurti, holding, position, rotation },
   ref,
 ) {
   const cfg = MODELS[who]
@@ -162,16 +208,19 @@ const CoupleModel = forwardRef<THREE.Group, CoupleProps>(function CoupleModel(
       upperR: bone('UpperArm_R'),
       foreL: bone('Forearm_L'),
       foreR: bone('Forearm_R'),
+      handR: bone('Hand_R'),
     }
     const hips = bone('Hips')
     // rest poses of the bones we layer rotations onto (clips don't key every bone every frame)
-    const rest = Object.values(bones)
-      .filter((b): b is THREE.Bone => !!b)
+    const rest = Object.entries(bones)
+      .filter((e): e is [string, THREE.Bone] => !!e[1] && e[0] !== 'handR')
+      .map(([, b]) => b)
       .map((b) => [b, b.quaternion.clone()] as const)
     return { model, mixer, actions, bones, rest, hipY: hips ? hips.position.y : cfg.modelHeight * 0.5 }
   }, [scene, animations, kurti])
 
   useEffect(() => () => void mixer.stopAllAction(), [mixer])
+  const held = useRef<THREE.Group>(null)
 
   const scale = (cfg.height / cfg.modelHeight) * size
   const [tableUpper, tableFore] = useMemo(() => [qx(-reach[0]), qx(-reach[1])], [reach[0], reach[1]])
@@ -233,6 +282,12 @@ const CoupleModel = forwardRef<THREE.Group, CoupleProps>(function CoupleModel(
         b.foreR?.quaternion.multiply(PHONE_FORE)
       }
     }
+    // keep the held tablet in the right hand, screen always facing forward (towards the audience)
+    if (held.current && b.handR) {
+      b.handR.getWorldPosition(handPos)
+      root.current.worldToLocal(handPos)
+      held.current.position.copy(handPos).add(TABLET_OFFSET)
+    }
   })
 
   // seated: drop the hips to the seat
@@ -240,6 +295,11 @@ const CoupleModel = forwardRef<THREE.Group, CoupleProps>(function CoupleModel(
   return (
     <group ref={root} position={position} rotation={rotation}>
       <primitive object={model} position={[0, y, 0]} scale={scale} />
+      {holding === 'tablet' && (
+        <group ref={held}>
+          <Tablet />
+        </group>
+      )}
     </group>
   )
 })
