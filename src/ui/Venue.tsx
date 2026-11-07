@@ -48,15 +48,8 @@ function Gallery() {
   )
 }
 
-const TABS = [
-  ['byAir', 'By Air ✈️'],
-  ['byTrain', 'By Train 🚆'],
-  ['byRoad', 'By Road 🚗'],
-] as const
-
 export function Venue({ staticMode = false }: { staticMode?: boolean }) {
   const v = wedding.venue
-  const [tab, setTab] = useState<(typeof TABS)[number][0]>('byAir')
   const focus = useStore((s) => s.mapFocus)
   const setFocus = useStore((s) => s.setMapFocus)
   return (
@@ -72,18 +65,6 @@ export function Venue({ staticMode = false }: { staticMode?: boolean }) {
           </a>
           <Gallery />
           <LazyMap />
-          <div className="mt-6" role="tablist" aria-label="How to get there">
-            <div className="flex flex-wrap gap-2">
-              {TABS.map(([k, label]) => (
-                <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)} className={`min-h-[44px] rounded-full px-4 font-sans text-sm transition ${tab === k ? 'bg-espresso text-foam' : 'bg-latte text-espresso'}`}>
-                  {label}
-                </button>
-              ))}
-            </div>
-            <p role="tabpanel" className="mt-3 font-sans leading-relaxed text-espresso/90">
-              {v[tab]}
-            </p>
-          </div>
           {v.hotels.length > 0 && (
             <>
           <h3 className="mt-6 font-hand text-3xl text-espresso">Where to stay</h3>
@@ -120,8 +101,17 @@ export function Venue({ staticMode = false }: { staticMode?: boolean }) {
                 <div>
                   <h3 className="font-serif text-2xl text-espresso">{e.name}</h3>
                   <p className="font-sans text-sm text-mocha">
-                    {e.date} · {e.time}
+                    {e.schedule ? e.date : `${e.date} · ${e.time}`}
                   </p>
+                  {e.schedule && (
+                    <ul className="mt-1 font-sans text-sm text-espresso">
+                      {e.schedule.map((s) => (
+                        <li key={s.name}>
+                          <span className="font-semibold">{s.name}</span> · {s.time}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
                 <p className="mt-2 font-sans text-espresso/90">
                   {e.venue} · <span className="text-espresso/70">{e.address}</span>

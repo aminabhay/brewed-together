@@ -10,7 +10,6 @@ import { canvasTexture, HAND, SANS, memoTex } from '../../components/textures'
 import { mat, PALETTE } from '../../components/materials'
 import { isNear } from '../useBeatVisibility'
 import { Chapter, Room } from './Chapter'
-import { interactBus } from '../../../state/interactBus'
 
 /** The Pixolo wall logo: chunky lowercase maroon letters, like the real sign. */
 export function PixoloSign({ position = [0.4, 2.7, -3.12] as [number, number, number], width = 3.4 }: { position?: [number, number, number]; width?: number }) {
@@ -98,9 +97,8 @@ function Laptop({ position }: { position: [number, number, number] }) {
 function IdCard() {
   const drop = useRef<THREE.Group>(null!)
   const flipper = useRef<THREE.Group>(null!)
-  const [flipped, setFlipped] = useState(false)
   const dropped = useRef(false)
-  const { jyotiJoiningYear, idBack } = wedding.chapterExtras
+  const { jyotiJoiningYear } = wedding.chapterExtras
   // Hi-res, unlit card faces so the text stays crisp from across the table
   const front = useMemo(
     () =>
@@ -132,27 +130,6 @@ function IdCard() {
       }),
     [],
   )
-  const back = useMemo(
-    () =>
-      canvasTexture(1024, 640, (ctx, w, h) => {
-        ctx.fillStyle = '#3B2418'
-        ctx.fillRect(0, 0, w, h)
-        ctx.strokeStyle = '#FFB347'
-        ctx.lineWidth = 10
-        ctx.strokeRect(30, 30, w - 60, h - 60)
-        ctx.fillStyle = '#FFF8EE'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        const [label, ...rest] = idBack.split(':')
-        ctx.font = `700 64px ${SANS}`
-        ctx.fillText(label.trim().toUpperCase(), w / 2, 170)
-        ctx.fillStyle = '#FFB347'
-        ctx.font = `700 110px ${HAND}`
-        const lines = rest.join(':').trim().split(/(?<=\.)\s+/)
-        lines.forEach((l, i) => ctx.fillText(l, w / 2, 320 + i * 130))
-      }),
-    [],
-  )
   useFrame(() => {
     if (!dropped.current && isNear(['ch5'], 0.3)) {
       dropped.current = true
@@ -160,34 +137,16 @@ function IdCard() {
     }
     flipper.current.rotation.z = Math.sin(performance.now() / 900) * 0.03
   })
-  useEffect(() => {
-    interactBus.flipCard = () => setFlipped((f) => !f)
-  }, [])
-  useEffect(() => {
-    gsap.to(flipper.current.rotation, { y: flipped ? Math.PI : 0, duration: 0.7, ease: 'back.out(1.6)' })
-  }, [flipped])
   return (
     <group ref={drop} position={[1.9, 7, 1.2]} scale={2.1}>
       <mesh position={[0, 3, 0]} material={mat('#D98A8A')}>
         <boxGeometry args={[0.04, 6, 0.01]} />
       </mesh>
-      <group
-        ref={flipper}
-        onClick={(e) => {
-          e.stopPropagation()
-          setFlipped((f) => !f)
-        }}
-        onPointerOver={() => (document.body.style.cursor = 'pointer')}
-        onPointerOut={() => (document.body.style.cursor = '')}
-      >
+      <group ref={flipper}>
         <RoundedBox args={[1.3, 0.82, 0.03]} radius={0.04} smoothness={2} material={mat('#ffffff')} />
         <mesh position={[0, 0, 0.017]}>
           <planeGeometry args={[1.26, 0.78]} />
           <meshBasicMaterial map={front} toneMapped={false} />
-        </mesh>
-        <mesh position={[0, 0, -0.017]} rotation={[0, Math.PI, 0]}>
-          <planeGeometry args={[1.26, 0.78]} />
-          <meshBasicMaterial map={back} toneMapped={false} />
         </mesh>
       </group>
     </group>

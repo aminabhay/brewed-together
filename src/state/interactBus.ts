@@ -5,6 +5,4 @@
 export const interactBus = {
   deskTip: () => {},
   knock: () => {},
-  stamp: () => {},
-  flipCard: () => {},
 }

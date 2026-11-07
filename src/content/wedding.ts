@@ -22,6 +22,8 @@ export interface WeddingEvent {
   startISO: string // for calendar links
   endISO: string
   time: string
+  /** optional run of the day, shown on the event card */
+  schedule?: { name: string; time: string }[]
   venue: string
   address: string
   mapsUrl: string
@@ -46,7 +48,7 @@ export const wedding = {
   },
 
   date: {
-    iso: '2026-12-09T18:30:00+05:30', // time is a PLACEHOLDER (6:30 PM); the date is final
+    iso: '2026-12-09T17:00:00+05:30', // wedding at 5 PM, reception at 7 PM
     cupA: '9 Dec',
     cupB: '2026',
     display: 'Wednesday, 9 December 2026',
@@ -86,13 +88,13 @@ export const wedding = {
       id: 'ch3',
       title: 'The Knock',
       plate: 'Ch. 3 · The Knock',
-      text: 'So she walked up to the teacher and said she wanted to learn it too.', // PLACEHOLDER {{CH3_TEXT}}
+      text: 'So she went to her professor at college and said she wanted to learn it too.',
     },
     {
       id: 'ch4',
       title: 'The Recommendation',
       plate: 'Ch. 4 · The Recommendation',
-      text: "The teacher told Abhay about her: 'She's a brilliant student.'", // PLACEHOLDER {{CH4_TEXT}}
+      text: "Her professor called Abhay: 'Take Jyoti on as an intern. She's a brilliant student.'",
     },
     {
       id: 'ch5',
@@ -119,12 +121,10 @@ export const wedding = {
       { from: 'Karan', text: 'Notes won’t do it justice, you had to be there' },
       { from: 'jyoti', text: 'Wait… what guest lecture?? What did I miss?!' },
     ] as { from: string; text: string }[],
-    teacherNamePlate: 'Staff Room', // PLACEHOLDER {{TEACHER_NAME_OR_'Staff Room'}}
+    teacherNamePlate: 'Professor’s Cabin',
     knockLine: 'I want to learn it too.',
-    stampText: 'BRILLIANT STUDENT',
     pixoloLogoUrl: '', // PLACEHOLDER {{PIXOLO_LOGO_URL}} (optional, leave '' for neon text)
     jyotiJoiningYear: '2014',
-    idBack: 'Status: Most loyal. Most brilliant.',
   },
 
   sheStayed: {
@@ -149,11 +149,15 @@ export const wedding = {
   events: [
     {
       id: 'wedding',
-      name: 'Wedding',
+      name: 'Wedding & Reception',
       date: 'Wednesday, 9 December 2026',
-      startISO: '2026-12-09T18:30:00+05:30', // time is a PLACEHOLDER
+      startISO: '2026-12-09T17:00:00+05:30',
       endISO: '2026-12-09T23:30:00+05:30', // time is a PLACEHOLDER
-      time: '6:30 PM', // PLACEHOLDER
+      time: '5:00 PM',
+      schedule: [
+        { name: 'Wedding', time: '5:00 PM' },
+        { name: 'Reception', time: '7:00 PM' },
+      ],
       venue: 'Murlidhar Banquet',
       address: 'Ghodbunder Rd, opposite Mahanagar Gas Pump, next to Trimurti TMC School, Owale, Thane West, Maharashtra 400615',
       mapsUrl: 'https://share.google/jd5BnSHSYTIIsVKjQ',
@@ -168,13 +172,6 @@ export const wedding = {
     address: 'Ghodbunder Rd, opposite Mahanagar Gas Pump, next to Trimurti TMC School, Owale, Thane West, Maharashtra 400615',
     mapsUrl: 'https://share.google/jd5BnSHSYTIIsVKjQ',
     embedUrl: 'https://www.google.com/maps?q=Murlidhar+Banquet,+Ghodbunder+Road,+Owale,+Thane+West&output=embed',
-    // Travel notes are approximate; adjust if you know better routes.
-    byAir:
-      'Nearest airport: Chhatrapati Shivaji Maharaj International (BOM), roughly 30 km away. Allow 1 to 1.5 hours by cab, depending on traffic.',
-    byTrain:
-      'Nearest railway station: Thane, about 10 km away. Take a cab or auto towards Ghodbunder Road and ask for Owale, opposite the Mahanagar Gas pump.',
-    byRoad:
-      'The banquet is on Ghodbunder Road in Owale, Thane West, opposite the Mahanagar Gas pump and next to Trimurti TMC School. Ghodbunder Road gets busy in the evenings, so leave a little early.',
     hotels: [] as Hotel[], // add { name, note, url } entries to show a "Where to stay" list
     parking: 'The banquet has ample, secured valet parking for guests.',
     /** Photos in /public/venue, shown as a gallery on the venue card. */
@@ -197,15 +194,15 @@ export const wedding = {
     { q: 'Dress code', a: 'No dress code! We just want you to look special and be comfortable.' },
     { q: 'Parking', a: 'Murlidhar Banquet has ample, secured valet parking right at the venue.' },
     { q: 'Are kids welcome?', a: 'Yes! And we have something special planned just for them.' },
-    { q: 'Gifts', a: 'Your presence is the gift. If you insist, blessings in an envelope are lovely.' }, // PLACEHOLDER
+    { q: 'Gifts', a: 'Your presence is the gift.' },
     { q: 'Weather', a: 'The banquet hall is fully air-conditioned, so dress for the occasion, not the weather.' },
-    { q: 'Whom do I call?', a: 'Akshay (Abhay’s side) at 98694 83112, or Dinesh (Jyoti’s side) at 976941186.' },
+    { q: 'Who do I call?', a: 'Akshay (Abhay’s side) at +91 98694 83112, or Dinesh (Jyoti’s side) at +91 976941186.' },
   ],
 
   footer: {
     contacts: [
       { name: 'Akshay · Abhay’s side', phone: '+91 98694 83112' },
-      { name: 'Dinesh · Jyoti’s side', phone: '976941186' }, // CHECK: only 9 digits as given
+      { name: 'Dinesh · Jyoti’s side', phone: '+91 976941186' }, // CHECK: only 9 digits as given
     ],
     madeBy: 'Made with love (and a lot of coffee) by Weddingo',
     madeByBrand: 'Weddingo',

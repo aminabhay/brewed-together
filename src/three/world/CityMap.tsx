@@ -21,6 +21,8 @@ const W = MAP.half * 2
 const D = MAP.half * 1.4
 const X0 = MAP.center[0] - W / 2
 const Z0 = MAP.center[2] - D / 2
+/** where the big THANE lettering sits (x, z of its baseline centre); no buildings rise over it */
+const THANE_LABEL: [number, number] = [MAP.center[0] + 2, Z0 + D * 0.5]
 const HILLS_Z = Z0 + D * 0.24 // the far band is hill country
 const CREEK_X = X0 + W * 0.9 // water on the east edge
 
@@ -152,7 +154,7 @@ function parchmentTexture(venue: THREE.Vector3) {
       ctx.fillText(text, 0, 0)
       ctx.restore()
     }
-    label('THANE', MAP.center[0] - 4, Z0 + D * 0.5, 96, 0, SERIF, '700', '14px')
+    label('THANE', THANE_LABEL[0], THANE_LABEL[1], 96, 0, SERIF, '700', '14px')
     label('Yeoor Hills', X0 + W * 0.5, Z0 + D * 0.12, 54, 0, SERIF, 'italic 500', '4px')
     label('Thane Creek', CREEK_X + 5, Z0 + D * 0.55, 46, Math.PI / 2, SERIF, 'italic 500', '4px')
     label('Ghodbunder Road', X0 + W * 0.3, Z0 + D * 0.67, 42, -0.12, SERIF, 'italic 500', '3px')
@@ -263,6 +265,7 @@ function Clockwork({ avoid, brass }: { avoid: THREE.Vector3[]; brass: Brass }) {
         const wz = z + 1.6
         if (Math.hypot(CAFE[0] - wx, CAFE[2] - wz) < 9) continue // keep the café diorama clear
         if (avoid.some((p) => Math.hypot(p.x - wx, p.z - wz) < 8)) continue
+        if (Math.abs(wx - THANE_LABEL[0]) < 17 && wz > THANE_LABEL[1] - 8 && wz < THANE_LABEL[1] + 9) continue // keep the THANE lettering readable
         if (rng() < 0.18) continue // little squares
         const dist = Math.hypot(wx - MAP.center[0], wz - MAP.center[2])
         const tower = rng() < 0.22

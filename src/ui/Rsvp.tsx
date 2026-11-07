@@ -89,7 +89,7 @@ export function Rsvp() {
         // already RSVP'd with this phone / email: show it on the field
         setErr({ [e.field]: e.message })
         setRsvp({ status: 'idle' })
-      } else setRsvp({ status: 'error', error: 'We couldn’t send your order. Check your connection and try again?' })
+      } else setRsvp({ status: 'error', error: 'We couldn’t send your RSVP. Check your connection and try again?' })
     } finally {
       busy.current = false
     }
@@ -107,9 +107,9 @@ export function Rsvp() {
                 <div className="printer-slot" />
               </div>
               <div className="receipt" role="status">
-                <p className="text-center font-mono text-lg font-bold">ORDER CONFIRMED ☕</p>
+                <p className="text-center font-mono text-lg font-bold">YOU’RE ON THE LIST ♥</p>
                 <p className="mt-2 border-t border-dashed border-espresso/40 pt-2 text-center font-mono">
-                  Seats reserved for {rsvp.name} × {rsvp.count}
+                  {rsvp.count === 1 ? 'A seat' : `${rsvp.count} seats`} saved for {rsvp.name}
                 </p>
                 <p className="mt-1 text-center font-mono">See you on {wedding.date.display}</p>
                 <p className="mt-3 border-t border-dashed border-espresso/40 pt-2 text-center font-hand text-2xl">thank you ♥</p>
@@ -118,7 +118,7 @@ export function Rsvp() {
             </div>
           ) : (
             <form onSubmit={submit} noValidate className="order-slip relative rounded-sm p-6 pt-8 shadow-2xl md:p-8" aria-describedby="rsvp-deadline">
-              <h2 className="font-hand text-5xl text-espresso">Your Order</h2>
+              <h2 className="font-hand text-5xl text-espresso">Will you join us?</h2>
               <p id="rsvp-deadline" className="font-sans text-xs uppercase tracking-widest text-mocha">
                 Kindly RSVP by {deadline}
               </p>
@@ -194,7 +194,7 @@ export function Rsvp() {
                 </p>
               )}
               <button type="submit" className="btn w-full justify-center" disabled={rsvp.status === 'sending'}>
-                {rsvp.status === 'sending' ? 'Sending your order…' : rsvp.status === 'error' ? 'Try again' : 'Happy to join'}
+                {rsvp.status === 'sending' ? 'Sending…' : rsvp.status === 'error' ? 'Try again' : 'Happy to join'}
               </button>
             </form>
           )}

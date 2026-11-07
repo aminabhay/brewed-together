@@ -5,24 +5,22 @@ import { interactBus } from '../state/interactBus'
 import { scrollState, smooth } from '../scroll/scrollState'
 import { Section, Sticky } from './Section'
 
-const ACTIONS: Record<string, { hint: string; label: string; run: () => void } | undefined> = {
-  ch1: { hint: 'Tap the glowing desk', label: 'Show the empty desk', run: () => interactBus.deskTip() },
-  ch2: { hint: 'Tap Jyoti’s phone', label: 'Read her messages', run: () => useStore.getState().setPhoneOpen(true) },
-  ch3: { hint: 'Tap the door', label: 'Knock on the door', run: () => interactBus.knock() },
-  ch4: { hint: 'Drag the red stamp onto the note', label: 'Stamp it', run: () => interactBus.stamp() },
-  ch5: { hint: 'Tap the ID card', label: 'Flip the ID card', run: () => interactBus.flipCard() },
+const ACTIONS: Record<string, { hint?: string; label: string; run: () => void } | undefined> = {
+  ch1: { label: 'Show the empty desk', run: () => interactBus.deskTip() },
+  ch2: { label: 'Read her messages', run: () => useStore.getState().setPhoneOpen(true) },
+  ch3: { label: 'Knock on the door', run: () => interactBus.knock() },
 }
 
 function StoryCard({ id, title, text }: { id: string; title: string; text: string }) {
   const a = ACTIONS[id]
   return (
-    <div className="story-card pointer-events-auto absolute inset-x-4 bottom-[4vh] mx-auto max-w-md md:inset-x-auto md:bottom-auto md:right-[6vw] md:top-1/2 md:w-[26rem] md:-translate-y-1/2">
+    <div className="story-card pointer-events-auto absolute inset-x-4 bottom-[calc(4vh+40px)] mx-auto max-w-md md:inset-x-auto md:bottom-auto md:right-[6vw] md:top-1/2 md:w-[26rem] md:-translate-y-1/2">
       <div className="paper rounded-2xl p-5 md:p-7">
         <h3 className="font-hand text-4xl text-espresso md:text-5xl">{title}</h3>
         <p className="mt-2 font-serif text-lg leading-snug text-espresso/90 md:text-xl">{text}</p>
         {a && (
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            <span className="font-sans text-xs uppercase tracking-widest text-mocha">{a.hint}</span>
+            {a.hint && <span className="font-sans text-xs uppercase tracking-widest text-mocha">{a.hint}</span>}
             <button onClick={a.run} className="btn-small">
               {a.label}
             </button>
@@ -178,7 +176,7 @@ export function Story() {
       ))}
       <Section id="ch6" label={wedding.story[5].title}>
         <Sticky>
-          <div className="story-card absolute inset-x-4 bottom-[4vh] mx-auto max-w-sm text-center md:left-[6vw] md:right-auto md:mx-0 md:text-left">
+          <div className="story-card absolute inset-x-4 bottom-[calc(4vh+40px)] mx-auto max-w-sm text-center md:left-[6vw] md:right-auto md:mx-0 md:text-left">
             <h3 className="font-hand text-4xl text-foam drop-shadow md:text-5xl">{wedding.story[5].title}</h3>
             <p className="font-serif text-lg text-latte drop-shadow">{wedding.story[5].text}</p>
           </div>

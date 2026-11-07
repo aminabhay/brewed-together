@@ -8,8 +8,8 @@ export function Faq() {
     <Section id="faq" auto label="Questions">
       <div className="flex min-h-[130svh] items-center justify-center px-4 py-[15vh]">
         <div className="chalkboard pointer-events-auto w-full max-w-xl rounded-xl p-6 md:p-10">
-          <h2 className="text-center font-hand text-6xl text-[#F3EEE3]">Menu</h2>
-          <p className="text-center font-hand text-2xl text-[#F3EEE3]/70">questions, served warm</p>
+          <h2 className="text-center font-hand text-6xl text-[#F3EEE3]">Questions</h2>
+          <p className="text-center font-hand text-2xl text-[#F3EEE3]/70">everything you might want to know</p>
           <ul className="mt-6 space-y-1">
             {wedding.faq.map((item, i) => {
               const isOpen = open === i

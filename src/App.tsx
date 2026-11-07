@@ -6,6 +6,7 @@ import { beatIndex, type BeatId } from './scroll/beats'
 import { setMood } from './audio/sounds'
 import { Loader } from './ui/Loader'
 import { SoundToggle } from './ui/SoundToggle'
+import { ScrollCue } from './ui/ScrollCue'
 import { Hero } from './ui/Hero'
 import { CupsSection } from './ui/CupsSection'
 import { Story, FullCircle, PhoneOverlay } from './ui/Story'
@@ -120,6 +121,7 @@ export default function App() {
         <PhoneOverlay />
       </ErrorBoundary>
       <SoundToggle />
+      <ScrollCue />
       <Loader ready={tierReady} />
     </>
   )
