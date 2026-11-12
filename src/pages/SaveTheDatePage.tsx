@@ -13,7 +13,7 @@ export default function SaveTheDatePage() {
   const Game = game.component
 
   useEffect(() => {
-    document.title = `Save the Date · ${coupleConfig.brideName} & ${coupleConfig.groomName}`
+    document.title = `Save the Date · ${coupleConfig.brideName} & ${coupleConfig.groomName} | MyWeddingo`
     document.documentElement.classList.add('std-page')
     return () => document.documentElement.classList.remove('std-page')
   }, [])

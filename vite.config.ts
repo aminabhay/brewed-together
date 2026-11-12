@@ -1,4 +1,4 @@
-import { defineConfig, type Plugin } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { writeFileSync } from 'node:fs'
 
@@ -42,8 +42,23 @@ const assetSaver = (): Plugin => ({
   },
 })
 
-export default defineConfig({
-  plugins: [react(), ogSaver(), assetSaver()],
+/**
+ * Share previews (WhatsApp, iMessage, Facebook…) need absolute URLs for og:image / og:url.
+ * index.html uses %SITE_URL%; it becomes VITE_SITE_URL if set, else the Vercel production domain,
+ * else nothing (relative URLs, fine for local dev).
+ */
+const siteUrl = (mode: string): Plugin => {
+  const env = loadEnv(mode, process.cwd(), '')
+  const vercel = env.VERCEL_PROJECT_PRODUCTION_URL || env.VERCEL_URL
+  const url = (env.VITE_SITE_URL || (vercel ? `https://${vercel}` : '')).replace(/\/+$/, '')
+  return {
+    name: 'site-url',
+    transformIndexHtml: { order: 'pre', handler: (html) => html.replaceAll('%SITE_URL%', url) },
+  }
+}
+
+export default defineConfig(({ mode }) => ({
+  plugins: [react(), ogSaver(), assetSaver(), siteUrl(mode)],
   build: {
     target: 'es2020',
     chunkSizeWarningLimit: 1200,
@@ -58,4 +73,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

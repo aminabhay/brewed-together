@@ -82,7 +82,7 @@ npm run dev
 npm run og   # same thing, headless, if Playwright is installed
 ```
 
-Once the site is live, set absolute URLs for `og:image` / `twitter:image` in `index.html` (for example `https://your-domain/og.png`). Some WhatsApp clients ignore relative image URLs.
+Share previews (WhatsApp, iMessage, Facebook) use the title, description and `public/og.png` from `index.html`. WhatsApp needs an absolute image URL, so `%SITE_URL%` in `index.html` is filled in at build time: from `VITE_SITE_URL` if you set it (do this for a custom domain), otherwise from Vercel's production domain.
 
 ## Deploy to Vercel
 

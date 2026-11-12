@@ -224,8 +224,9 @@ export const wedding = {
   },
 
   meta: {
-    title: "Jyoti & Abhay · We're getting married ☕",
-    description: 'Brewed Together: the story of Jyoti & Abhay, and an invitation to one more coffee.',
+    // the live share tags are in index.html (kept in sync by hand)
+    title: 'Jyoti & Abhay are getting married · 9 December 2026 | MyWeddingo',
+    description: "You're invited to Jyoti & Abhay's wedding on Wednesday, 9 December 2026 at Murlidhar Banquet, Thane. Wedding 5 PM, reception 7 PM. Their story over coffee, made with MyWeddingo.",
   },
 }
 
