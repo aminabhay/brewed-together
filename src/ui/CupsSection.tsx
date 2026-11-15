@@ -4,7 +4,6 @@ import { useStore } from '../state/useStore'
 import { cupsBus } from '../state/cupsBus'
 import { Section, Sticky } from './Section'
 import { Countdown } from './Countdown'
-import { googleCalendarUrl, mainEvent } from './calendar'
 
 export function CupsSection() {
   const revealed = useStore((s) => s.dateRevealed)
@@ -16,7 +15,7 @@ export function CupsSection() {
   }
   return (
     <Section id="cups" label="The date">
-      <Sticky className="flex flex-col items-center justify-between px-4 pb-[6vh] pt-[9vh] text-center">
+      <Sticky className="flex flex-col items-center justify-between px-4 pb-[calc(6vh+64px)] pt-[9vh] text-center md:pb-[6vh]">
         {/* top: the big date once the cups line up */}
         <div className={`transition-all duration-1000 ${revealed ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-4 opacity-0'}`} aria-live="polite">
           {revealed && (
@@ -27,7 +26,7 @@ export function CupsSection() {
           )}
         </div>
 
-        {/* bottom: hint + controls, or countdown + calendar */}
+        {/* bottom: hint + controls, or the countdown (lifted on phones to clear the scroll cue) */}
         <div className="pointer-events-auto w-full max-w-xl">
           {!revealed ? (
             <div className="reveal-on-active flex flex-col items-center gap-3">
@@ -48,11 +47,6 @@ export function CupsSection() {
           ) : (
             <div className="fade-up flex flex-col items-center gap-4">
               <Countdown />
-              <div className="flex flex-wrap justify-center gap-2">
-                <a className="btn" href={googleCalendarUrl(mainEvent())} target="_blank" rel="noreferrer">
-                  Add to Google Calendar
-                </a>
-              </div>
             </div>
           )}
         </div>

@@ -196,13 +196,13 @@ export const wedding = {
     { q: 'Are kids welcome?', a: 'Yes! And we have something special planned just for them.' },
     { q: 'Gifts', a: 'Your presence is the gift.' },
     { q: 'Weather', a: 'The banquet hall is fully air-conditioned, so dress for the occasion, not the weather.' },
-    { q: 'Who do I call?', a: 'Akshay (Abhay’s side) at +91 98694 83112, or Dinesh (Jyoti’s side) at +91 976941186.' },
+    { q: 'Who do I call?', a: 'Akshay (Abhay’s side) at +91 9869 483 112, or Dinesh (Jyoti’s side) at +91 9768 941 186.' },
   ],
 
   footer: {
     contacts: [
-      { name: 'Akshay · Abhay’s side', phone: '+91 98694 83112' },
-      { name: 'Dinesh · Jyoti’s side', phone: '+91 976941186' }, // CHECK: only 9 digits as given
+      { name: 'Akshay · Abhay’s side', phone: '+91 9869 483 112' },
+      { name: 'Dinesh · Jyoti’s side', phone: '+91 9768 941 186' },
     ],
     madeBy: 'Made with love (and a lot of coffee) by Weddingo',
     madeByBrand: 'Weddingo',

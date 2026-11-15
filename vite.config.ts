@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
-import { writeFileSync } from 'node:fs'
+import { mkdirSync, writeFileSync } from 'node:fs'
 
 /** Dev-only hook used by /?og to save the rendered share image to public/og.png. */
 const ogSaver = (): Plugin => ({
@@ -35,8 +35,15 @@ const assetSaver = (): Plugin => ({
       const chunks: Buffer[] = []
       req.on('data', (c) => chunks.push(c))
       req.on('end', () => {
-        writeFileSync(new URL(`./public/${rel}`, import.meta.url), Buffer.concat(chunks))
-        res.end('ok')
+        try {
+          const file = new URL(`./public/${rel}`, import.meta.url)
+          mkdirSync(new URL('.', file), { recursive: true })
+          writeFileSync(file, Buffer.concat(chunks))
+          res.end('ok')
+        } catch (e) {
+          res.statusCode = 500
+          res.end(String(e))
+        }
       })
     })
   },

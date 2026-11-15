@@ -48,8 +48,9 @@ export function fairerSkin(scene: THREE.Object3D) {
     // always remap from the model's original colours, so changing SKIN takes effect without a reload
     const original: Float32Array = (g.userData.originalColors ??= Float32Array.from(col.array as ArrayLike<number>))
     g.userData.skinKey = key
+    const n = col.itemSize // RGB or RGBA vertex colours
     for (let i = 0; i < col.count; i++) {
-      c.setRGB(original[i * 3], original[i * 3 + 1], original[i * 3 + 2], THREE.LinearSRGBColorSpace)
+      c.setRGB(original[i * n], original[i * n + 1], original[i * n + 2], THREE.LinearSRGBColorSpace)
       c.getHSL(hsl, THREE.SRGBColorSpace)
       const deg = hsl.h * 360
       if (deg >= 12 && deg <= 30 && hsl.s >= 0.25 && hsl.s <= 0.6 && hsl.l >= 0.45 && hsl.l <= 0.68) {
@@ -127,6 +128,10 @@ const SIT_SHIN = qx(Math.PI / 2 - 0.15)
 const PHONE_UPPER_L = qx(-0.45).multiply(qz(0.3))
 const PHONE_UPPER_R = qx(-0.45).multiply(qz(-0.3))
 const PHONE_FORE = qx(-1.35)
+// once bent forward the hands rest palms-up; a quarter roll on the forearm plus a quarter on the wrist turns them face-down
+const qy = (a: number) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), a)
+const PALM_DOWN_L = qy(-Math.PI / 2)
+const PALM_DOWN_R = qy(Math.PI / 2)
 
 const handPos = new THREE.Vector3()
 /** from the wrist to the middle of the tablet, in the character's own space */
@@ -208,13 +213,13 @@ const CoupleModel = forwardRef<THREE.Group, CoupleProps>(function CoupleModel(
       upperR: bone('UpperArm_R'),
       foreL: bone('Forearm_L'),
       foreR: bone('Forearm_R'),
+      handL: bone('Hand_L'),
       handR: bone('Hand_R'),
     }
     const hips = bone('Hips')
     // rest poses of the bones we layer rotations onto (clips don't key every bone every frame)
-    const rest = Object.entries(bones)
-      .filter((e): e is [string, THREE.Bone] => !!e[1] && e[0] !== 'handR')
-      .map(([, b]) => b)
+    const rest = Object.values(bones)
+      .filter((b): b is THREE.Bone => !!b)
       .map((b) => [b, b.quaternion.clone()] as const)
     return { model, mixer, actions, bones, rest, hipY: hips ? hips.position.y : cfg.modelHeight * 0.5 }
   }, [scene, animations, kurti])
@@ -273,8 +278,12 @@ const CoupleModel = forwardRef<THREE.Group, CoupleProps>(function CoupleModel(
       if (hold === 'table') {
         b.upperL?.quaternion.multiply(tableUpper)
         b.upperR?.quaternion.multiply(tableUpper)
-        b.foreL?.quaternion.multiply(tableFore)
-        b.foreR?.quaternion.multiply(tableFore)
+        // bend forward, then turn the palms down onto the table: the half-turn is shared
+        // between forearm and wrist so the forearm doesn't pinch
+        b.foreL?.quaternion.multiply(tableFore).multiply(PALM_DOWN_L)
+        b.foreR?.quaternion.multiply(tableFore).multiply(PALM_DOWN_R)
+        b.handL?.quaternion.multiply(PALM_DOWN_L)
+        b.handR?.quaternion.multiply(PALM_DOWN_R)
       } else if (hold === 'phone') {
         b.upperL?.quaternion.multiply(PHONE_UPPER_L)
         b.upperR?.quaternion.multiply(PHONE_UPPER_R)

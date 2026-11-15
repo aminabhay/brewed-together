@@ -118,10 +118,10 @@ export function Venue({ staticMode = false }: { staticMode?: boolean }) {
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2" onClick={(ev) => ev.stopPropagation()}>
                   <a className="btn-small" href={googleCalendarUrl(cal)} target="_blank" rel="noreferrer">
-                    + Google Calendar
+                    Add to Google Calendar
                   </a>
                   <button className="btn-small" onClick={() => setFocus(i)} aria-label={`Show ${e.name} on the map`}>
-                    📍 On the map
+                    📍 View on Map
                   </button>
                 </div>
               </article>

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { wedding } from '../content/wedding'
 import { Countdown } from './Countdown'
-import { googleCalendarUrl, mainEvent } from './calendar'
 
 /** Static illustrated version for browsers without WebGL. Same story, same RSVP & FAQ (rendered by App). */
 export function FallbackStory() {
@@ -28,11 +27,6 @@ export function FallbackStory() {
             <p className="font-hand text-2xl text-mocha">{wedding.date.city}</p>
             <div className="mt-4">
               <Countdown />
-            </div>
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
-              <a className="btn" href={googleCalendarUrl(mainEvent())} target="_blank" rel="noreferrer">
-                Add to Google Calendar
-              </a>
             </div>
           </div>
         ) : (

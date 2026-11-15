@@ -22,10 +22,19 @@ export function ScrollCue() {
     }
     document.addEventListener('focusin', onFocus)
     document.addEventListener('focusout', () => (typing = false))
+    // when the guest stops scrolling for a moment, the cue grows and asks them to keep going
+    let lastY = window.scrollY
+    let lastMove = performance.now()
     const tick = () => {
+      const now = performance.now()
+      if (Math.abs(window.scrollY - lastY) > 2) {
+        lastY = window.scrollY
+        lastMove = now
+      }
       const max = document.documentElement.scrollHeight - window.innerHeight
       const atEnd = max > 0 && window.scrollY > max - window.innerHeight * 0.6
       el.current?.classList.toggle('is-hidden', atEnd || typing)
+      el.current?.classList.toggle('is-idle', now - lastMove > 2500)
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
@@ -38,7 +47,10 @@ export function ScrollCue() {
   const show = entered && chapter !== 'light' && !phoneOpen
   return (
     <div ref={el} className={`scroll-cue ${show ? '' : 'is-off'}`} aria-hidden>
-      <span className="scroll-cue-label">scroll</span>
+      <span className="scroll-cue-label">
+        <span className="scroll-cue-word">Scroll</span>
+        <span className="scroll-cue-more">Keep scrolling</span>
+      </span>
       <span className="scroll-cue-chevrons">
         <i />
         <i />

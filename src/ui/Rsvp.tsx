@@ -118,8 +118,8 @@ export function Rsvp() {
             </div>
           ) : (
             <form onSubmit={submit} noValidate className="order-slip relative rounded-sm p-6 pt-8 shadow-2xl md:p-8" aria-describedby="rsvp-deadline">
-              <h2 className="font-hand text-5xl text-espresso">Will you join us?</h2>
-              <p id="rsvp-deadline" className="font-sans text-xs uppercase tracking-widest text-mocha">
+              <h2 className="font-hand text-5xl leading-[1.15] text-espresso">Will you join us?</h2>
+              <p id="rsvp-deadline" className="mt-3 font-sans text-xs uppercase tracking-widest text-mocha">
                 Kindly RSVP by {deadline}
               </p>
 

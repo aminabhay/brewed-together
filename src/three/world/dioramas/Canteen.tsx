@@ -42,6 +42,8 @@ function Phone() {
   )
 }
 
+const FRIEND = 0.86
+
 export default function Canteen() {
   const tiles = useMemo(
     () =>
@@ -86,12 +88,13 @@ export default function Canteen() {
         <Couple who="jyoti" hold="phone" />
         <Phone />
       </group>
-      <Character shirt="#8A9A7B" pants="#4A4A55" hair="long" dress pose="wave" idle="laugh" position={[-1.6, 0.08, 0.2]} rotation={[0, 0.9, 0]} />
-      <Character shirt="#C98B4E" pants="#3A3F4B" hair="short" pose="stand" idle="laugh" position={[0.8, 0.08, 0.1]} rotation={[0, -0.8, 0]} />
-      <Character shirt="#7C6A9E" pants="#F3E5D0" hair="long" dress pose="stand" idle="tilt" position={[-1.3, 0.08, 1.8]} rotation={[0, 2.3, 0]} />
-      <Bubble text="!!" position={[-1.6, 2.2, 0.2]} width={1.2} pop delay={0} />
-      <Bubble text="…" position={[0.8, 2.2, 0.1]} width={1.2} pop delay={1.3} />
-      <Bubble text="😮" position={[-1.3, 2.2, 1.8]} width={1.2} pop delay={2.4} />
+      {/* the stand-in figures are ~1.65 tall and stockier; scaled so they read the same size as Jyoti (1.5) */}
+      <Character shirt="#8A9A7B" pants="#4A4A55" hair="long" dress pose="wave" idle="laugh" position={[-1.6, 0.08, 0.2]} rotation={[0, 0.9, 0]} scale={FRIEND} />
+      <Character shirt="#C98B4E" pants="#3A3F4B" hair="short" pose="stand" idle="laugh" position={[0.8, 0.08, 0.1]} rotation={[0, -0.8, 0]} scale={FRIEND} />
+      <Character shirt="#7C6A9E" pants="#F3E5D0" hair="long" dress pose="stand" idle="tilt" position={[-1.3, 0.08, 1.8]} rotation={[0, 2.3, 0]} scale={FRIEND} />
+      <Bubble text="!!" position={[-1.6, 1.95, 0.2]} width={1.2} pop delay={0} />
+      <Bubble text="…" position={[0.8, 1.95, 0.1]} width={1.2} pop delay={1.3} />
+      <Bubble text="😮" position={[-1.3, 1.95, 1.8]} width={1.2} pop delay={2.4} />
     </Chapter>
   )
 }
