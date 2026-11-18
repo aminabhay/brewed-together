@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useProgress } from '@react-three/drei'
 import { useStore } from '../state/useStore'
 import { startAudio } from '../audio/sounds'
@@ -18,7 +18,10 @@ export function Loader({ ready }: { ready: boolean }) {
   }, [])
 
   const real = active ? progress : 100
-  const pct = Math.round(Math.min(fake, real, ready ? 100 : 92))
+  // three.js reports "loaded / known" items, and the total grows as new files start (models, code
+  // chunks), so the raw number can fall back towards 0. Only ever move forward.
+  const shown = useRef(0)
+  const pct = (shown.current = Math.max(shown.current, Math.round(Math.min(fake, real, ready ? 100 : 92))))
   const done = pct >= 100
 
   const enter = () => {
