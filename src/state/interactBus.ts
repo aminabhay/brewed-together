@@ -3,6 +3,5 @@
  * (keyboard users, screen readers, and anyone who misses the tap target).
  */
 export const interactBus = {
-  deskTip: () => {},
   knock: () => {},
 }

@@ -1,17 +1,12 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Html } from '@react-three/drei'
 import * as THREE from 'three'
-import { wedding } from '../../../content/wedding'
 import { Couple } from '../../components/Couple'
 import { Crowd, type CrowdMember } from '../../components/Crowd'
 import { Desk } from '../../components/Props'
 import { canvasTexture, HAND, memoTex, SANS } from '../../components/textures'
 import { mat, PALETTE } from '../../components/materials'
 import { Chapter, Room } from './Chapter'
-import { isNear } from '../useBeatVisibility'
-import { interactBus } from '../../../state/interactBus'
-import { useEffect } from 'react'
 
 const COLS = [-2.1, 0, 2.1]
 const ROWS = [-0.5, 1.0, 2.5]
@@ -65,11 +60,8 @@ function Whiteboard() {
   )
 }
 
+/** The empty desk: a soft pulsing glow (the "Someone missed this one." note is in the story card). */
 function EmptyDesk() {
-  const [tip, setTip] = useState(false)
-  useEffect(() => {
-    interactBus.deskTip = () => setTip((t) => !t)
-  }, [])
   const glowRef = useRef<THREE.MeshBasicMaterial>(null!)
   const x = COLS[EMPTY.c]
   const z = ROWS[EMPTY.r]
@@ -88,41 +80,14 @@ function EmptyDesk() {
   )
   useFrame(({ clock }) => {
     glowRef.current.opacity = 0.55 + Math.sin(clock.elapsedTime * 2) * 0.2
-    // the tooltip is HTML, so it doesn't hide with the diorama: close it once the guest scrolls on
-    if (tip && !isNear(['ch1'], 0.45)) setTip(false)
   })
   return (
-    <group
-      onPointerOver={(e) => {
-        e.stopPropagation()
-        setTip(true)
-        document.body.style.cursor = 'pointer'
-      }}
-      onPointerOut={() => {
-        setTip(false)
-        document.body.style.cursor = ''
-      }}
-      onClick={(e) => {
-        e.stopPropagation()
-        setTip((t) => !t)
-      }}
-    >
+    <group>
       <Desk position={[x, 0, z]} color="#C79A6B" />
       <mesh position={[x, 0.1, z + 0.2]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[2.4, 2]} />
         <meshBasicMaterial ref={glowRef} map={ringTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
-      {/* invisible generous hit area (≥ 44px on phones) */}
-      <mesh position={[x, 0.6, z + 0.3]} visible={false}>
-        <boxGeometry args={[1.8, 1.4, 1.6]} />
-      </mesh>
-      {tip && (
-        <Html position={[x, 1.7, z]} center style={{ pointerEvents: 'none' }}>
-          <div className="bubble-pop whitespace-nowrap rounded-2xl bg-foam px-4 py-2 font-hand text-2xl text-espresso shadow-lg">
-            {wedding.chapterExtras.emptyDeskTooltip}
-          </div>
-        </Html>
-      )}
     </group>
   )
 }
