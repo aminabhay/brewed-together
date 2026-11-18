@@ -1,6 +1,9 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { Html } from '@react-three/drei'
 import * as THREE from 'three'
+import { wedding } from '../../../content/wedding'
+import { useStore } from '../../../state/useStore'
 import { Couple } from '../../components/Couple'
 import { Crowd, type CrowdMember } from '../../components/Crowd'
 import { Desk } from '../../components/Props'
@@ -60,8 +63,18 @@ function Whiteboard() {
   )
 }
 
-/** The empty desk: a soft pulsing glow (the "Someone missed this one." note is in the story card). */
+/**
+ * The empty desk: a soft pulsing glow, and "Someone missed this one." popping up above it by
+ * itself shortly after the scene arrives, then closing again a few seconds later.
+ */
 function EmptyDesk() {
+  const onScene = useStore((s) => s.chapter === 'ch1')
+  const [tip, setTip] = useState(false)
+  useEffect(() => {
+    if (!onScene) return setTip(false)
+    const t = [setTimeout(() => setTip(true), 900), setTimeout(() => setTip(false), 5200)]
+    return () => t.forEach(clearTimeout)
+  }, [onScene])
   const glowRef = useRef<THREE.MeshBasicMaterial>(null!)
   const x = COLS[EMPTY.c]
   const z = ROWS[EMPTY.r]
@@ -88,6 +101,13 @@ function EmptyDesk() {
         <planeGeometry args={[2.4, 2]} />
         <meshBasicMaterial ref={glowRef} map={ringTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
+      {tip && (
+        <Html position={[x, 1.7, z]} center style={{ pointerEvents: 'none' }}>
+          <div className="bubble-pop whitespace-nowrap rounded-2xl bg-foam px-4 py-2 font-hand text-2xl text-espresso shadow-lg">
+            {wedding.chapterExtras.emptyDeskTooltip}
+          </div>
+        </Html>
+      )}
     </group>
   )
 }

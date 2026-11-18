@@ -10,31 +10,10 @@ const ACTIONS: Record<string, { hint?: string; label: string; run: () => void } 
   ch3: { label: 'Knock on the door', run: () => interactBus.knock() },
 }
 
-/**
- * Chapter 1's "Someone missed this one." note. It pops up by itself shortly after the scene
- * arrives and fades away a few seconds later; it sits just above the story card so the card
- * can never cover it (the 3D scene is always drawn underneath the cards).
- */
-function EmptyDeskNote() {
-  const onScene = useStore((s) => s.chapter === 'ch1')
-  const [shown, setShown] = useState(false)
-  useEffect(() => {
-    if (!onScene) return setShown(false)
-    const t = [setTimeout(() => setShown(true), 900), setTimeout(() => setShown(false), 5200)]
-    return () => t.forEach(clearTimeout)
-  }, [onScene])
-  return (
-    <div className={`empty-desk-note ${shown ? 'is-in' : ''}`} role="status" aria-live="polite">
-      {shown && wedding.chapterExtras.emptyDeskTooltip}
-    </div>
-  )
-}
-
 function StoryCard({ id, title, text }: { id: string; title: string; text: string }) {
   const a = ACTIONS[id]
   return (
     <div className="story-card pointer-events-auto absolute inset-x-4 bottom-[calc(4vh+64px)] mx-auto max-w-md md:inset-x-auto md:bottom-auto md:right-[6vw] md:top-1/2 md:w-[26rem] md:-translate-y-1/2">
-      {id === 'ch1' && <EmptyDeskNote />}
       <div className="paper rounded-2xl p-5 md:p-7">
         <h3 className="font-hand text-4xl text-espresso md:text-5xl">{title}</h3>
         <p className="mt-2 font-serif text-lg leading-snug text-espresso/90 md:text-xl">{text}</p>
